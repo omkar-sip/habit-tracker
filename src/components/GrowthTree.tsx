@@ -4,12 +4,12 @@ import * as THREE from 'three'
 type GrowthTreeProps = { progress: number; stage: number }
 
 const colors = {
-  trunk: 0x4c2818,
-  trunkLight: 0x87502b,
-  leaf: 0x4f9d45,
-  leafLight: 0xa8d95f,
-  leafDark: 0x1c5c37,
-  ground: 0x234b2b,
+  trunk: 0x5b301d,
+  trunkLight: 0x965a31,
+  leaf: 0x5fa94d,
+  leafLight: 0xa6d765,
+  leafDark: 0x28663f,
+  ground: 0x2a5932,
 }
 
 const makeBranch = (from: THREE.Vector3, to: THREE.Vector3, radius: number, material: THREE.Material) => {
@@ -42,12 +42,12 @@ const addFoliageCluster = (group: THREE.Group, position: THREE.Vector3, scale: n
 const buildTree = (scene: THREE.Scene, progress: number, stage: number) => {
   const tree = new THREE.Group()
   const growth = Math.max(.18, Math.min(1, progress / 100))
-  const trunkMaterial = new THREE.MeshStandardMaterial({ color: colors.trunk, roughness: .88, metalness: 0 })
-  const trunkLightMaterial = new THREE.MeshStandardMaterial({ color: colors.trunkLight, roughness: .9 })
+  const trunkMaterial = new THREE.MeshStandardMaterial({ color: colors.trunk, roughness: .84, metalness: 0, emissive: 0x150a05, emissiveIntensity: .08 })
+  const trunkLightMaterial = new THREE.MeshStandardMaterial({ color: colors.trunkLight, roughness: .85, emissive: 0x241006, emissiveIntensity: .07 })
   const leafMaterials = [
-    new THREE.MeshStandardMaterial({ color: colors.leaf, roughness: .92 }),
-    new THREE.MeshStandardMaterial({ color: colors.leafLight, roughness: .95 }),
-    new THREE.MeshStandardMaterial({ color: colors.leafDark, roughness: .9 }),
+    new THREE.MeshStandardMaterial({ color: colors.leaf, roughness: .82, emissive: 0x16451b, emissiveIntensity: .16 }),
+    new THREE.MeshStandardMaterial({ color: colors.leafLight, roughness: .8, emissive: 0x466d1b, emissiveIntensity: .16 }),
+    new THREE.MeshStandardMaterial({ color: colors.leafDark, roughness: .84, emissive: 0x0c301e, emissiveIntensity: .14 }),
   ]
 
   const trunkTop = 2.35 * growth
@@ -64,7 +64,7 @@ const buildTree = (scene: THREE.Scene, progress: number, stage: number) => {
   ]
   clusters.forEach(([x, y, z, size], index) => addFoliageCluster(tree, new THREE.Vector3(x * growth, y * growth, z * growth), size * (.72 + growth * .34), leafMaterials))
 
-  const ground = new THREE.Mesh(new THREE.CircleGeometry(2.7, 64), new THREE.MeshStandardMaterial({ color: colors.ground, roughness: 1 }))
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(2.7, 64), new THREE.MeshStandardMaterial({ color: colors.ground, roughness: .96, emissive: 0x0b2111, emissiveIntensity: .1 }))
   ground.rotation.x = -Math.PI / 2
   ground.position.y = -.03
   ground.receiveShadow = true
@@ -87,7 +87,7 @@ export default function GrowthTree({ progress, stage }: GrowthTreeProps) {
       return
     }
     const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0x10261a, 7, 14)
+    scene.fog = new THREE.Fog(0x10261a, 9, 18)
     const camera = new THREE.PerspectiveCamera(30, 1, .1, 40)
     camera.position.set(0, 2.15, 11.4)
     camera.lookAt(0, 1.55, 0)
@@ -102,16 +102,16 @@ export default function GrowthTree({ progress, stage }: GrowthTreeProps) {
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.25
+    renderer.toneMappingExposure = 1.42
     mount.appendChild(renderer.domElement)
 
-    scene.add(new THREE.HemisphereLight(0xd8f7bf, 0x12251b, 2.2))
-    const key = new THREE.DirectionalLight(0xf5ffd7, 3.4)
+    scene.add(new THREE.HemisphereLight(0xe1f7cb, 0x1e3a26, 2.6))
+    const key = new THREE.DirectionalLight(0xffffe6, 4)
     key.position.set(-4, 7, 5)
     key.castShadow = true
     key.shadow.mapSize.set(1024, 1024)
     scene.add(key)
-    const rim = new THREE.PointLight(0xb7f36b, 2.2, 8)
+    const rim = new THREE.PointLight(0xc9f276, 3, 9)
     rim.position.set(3, 3.5, -2)
     scene.add(rim)
 
