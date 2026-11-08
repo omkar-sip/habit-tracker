@@ -1,6 +1,6 @@
 export const pad = (value: number) => String(value).padStart(2, '0')
 
-const browserTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+const browserTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata'
 
 const partsInTimezone = (value: Date, timezone: string) => {
   const parts = new Intl.DateTimeFormat('en-US', { timeZone: timezone || browserTimezone(), year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' }).formatToParts(value)

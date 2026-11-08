@@ -675,3 +675,9 @@ html:not(.light) .sidebar .level-panel {
 html:not(.light) .sidebar-footer {
   border-top-color: rgba(255,255,255,.2);
 }
+
+.brand-mark.brand-logo,
+.light .brand-mark.brand-logo {
+  background: transparent !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.2), 0 10px 30px rgba(0,0,0,.2) !important;
+}

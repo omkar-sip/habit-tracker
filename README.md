@@ -14,7 +14,7 @@ cp .env.example .env
 pnpm dev
 ```
 
-The Vite preview runs on port 3000 and the Express API runs on port 3001. The product is intentionally populated with the Alex Morgan demo workspace on first load. The UI keeps an optimistic local snapshot for an uninterrupted walkthrough and mirrors login, create/edit/delete, and completion calls to the Express API through Vite's `/api` proxy. Browser local storage preserves the walkthrough between refreshes.
+The Vite preview runs on port 3000 and the Express API runs on port 3001. The product is intentionally populated with the Sheetal Ingale demo workspace on first load. The UI keeps an optimistic local snapshot for an uninterrupted walkthrough and mirrors login, create/edit/delete, and completion calls to the Express API through Vite's `/api` proxy. Browser local storage preserves the walkthrough between refreshes.
 
 ## Streak algorithm
 

@@ -6,7 +6,7 @@ export const seedUser: User = {
   name: 'Sheetal Ingale',
   email: 'sheetal@habitforge.app',
   initials: 'SI',
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Los_Angeles',
+  timezone: 'Asia/Kolkata',
   plan: 'free',
   xp: 1280,
   level: 4,
