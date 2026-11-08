@@ -361,6 +361,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .light .challenge-editor-row { border-color: rgba(17,19,28,.08); background: rgba(17,19,28,.025); }
 .light .challenge-editor-row input { color: #11131c; }
 .light .challenge-editor-row input + input { color: #7c8197; }
+.light .challenge-tree-card { box-shadow: 0 24px 60px rgba(37,44,157,.12); }
+.light .challenge-task-list .challenge-task { border-color: transparent; box-shadow: 0 10px 22px rgba(45,38,84,.07); }
+.light .challenge-task-list .challenge-task:nth-child(1) { background: linear-gradient(135deg, #f3ffd9, #e7ffc0); }
+.light .challenge-task-list .challenge-task:nth-child(2) { background: linear-gradient(135deg, #f0ecff, #e5ddff); }
+.light .challenge-task-list .challenge-task:nth-child(3) { background: linear-gradient(135deg, #fff4df, #ffe8c2); }
+.light .challenge-task-list .challenge-task:hover { box-shadow: 0 14px 28px rgba(45,38,84,.12); }
+.light .challenge-task-list .challenge-task-done { box-shadow: 0 12px 26px rgba(125,190,55,.16); }
+.light .challenge-day-grid .challenge-day-cell { border-color: rgba(86,96,232,.12); background: linear-gradient(145deg, #fff, #f5f3ff); box-shadow: 0 6px 14px rgba(45,38,84,.045); color: #78809b; }
+.light .challenge-day-grid .challenge-day-cell:nth-child(3n + 1) { background: linear-gradient(145deg, #f7ffe8, #efffd5); }
+.light .challenge-day-grid .challenge-day-cell:nth-child(3n + 2) { background: linear-gradient(145deg, #f5f1ff, #eee8ff); }
+.light .challenge-day-grid .challenge-day-cell:nth-child(3n) { background: linear-gradient(145deg, #fff7e7, #fff0d5); }
+.light .challenge-day-grid .challenge-day-complete { background: linear-gradient(145deg, #d6ff91, #b7f36b); border-color: rgba(102,154,29,.18); color: #294413; }
+.light .challenge-day-grid .challenge-day-partial { background: linear-gradient(145deg, #dcd2ff, #bca8ff); border-color: rgba(111,82,221,.18); color: #35206f; }
+.light .challenge-day-grid .challenge-day-current { outline-color: #ff9d43; }
 @media (max-width: 640px) {
   .challenge-tree-card { min-height: 380px; }
   .challenge-tree { height: 180px; }
