@@ -72,6 +72,96 @@ const challengeProgress = (challenge: Challenge21) => {
   return Math.round((completed / Math.max(1, challenge.tasks.length * 21)) * 100)
 }
 
+const roundedRect = (context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
+  context.beginPath()
+  context.roundRect(x, y, width, height, radius)
+  context.closePath()
+}
+
+const downloadGrindStatus = (user: User, snapshot: AppSnapshot) => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 1080
+  canvas.height = 1920
+  const context = canvas.getContext('2d')
+  if (!context) return
+  const gradient = context.createLinearGradient(0, 0, 1080, 1350)
+  gradient.addColorStop(0, '#f43f5e')
+  gradient.addColorStop(.48, '#e11d48')
+  gradient.addColorStop(1, '#be123c')
+  context.fillStyle = gradient
+  context.fillRect(0, 0, canvas.width, canvas.height)
+  context.fillStyle = 'rgba(183,243,107,.16)'
+  context.beginPath(); context.arc(930, 170, 220, 0, Math.PI * 2); context.fill()
+  context.fillStyle = 'rgba(255,255,255,.08)'
+  context.beginPath(); context.arc(115, 1180, 300, 0, Math.PI * 2); context.fill()
+  context.fillStyle = '#ffffff'
+  context.font = '800 28px Inter, sans-serif'
+  context.letterSpacing = '6px'
+  context.fillText('HABITFORGE', 72, 92)
+  context.font = '700 18px Inter, sans-serif'
+  context.fillStyle = 'rgba(255,255,255,.68)'
+  context.fillText('GRIND STATUS / 21-DAY GROWTH', 72, 132)
+  const image = new Image()
+  const drawContent = () => {
+    const frameX = 150
+    const frameY = 190
+    const frameWidth = 780
+    // Keep the export frame aligned with the live 250:300 portrait frame.
+    const frameHeight = 936
+    const frameRadius = 58
+    if (user.grindPhoto) {
+      const crop = user.grindPhotoCrop ?? { scale: 1, x: 0, y: 0 }
+      context.save()
+      roundedRect(context, frameX, frameY, frameWidth, frameHeight, frameRadius)
+      context.clip()
+      const scale = Math.max(frameWidth / image.width, frameHeight / image.height) * crop.scale
+      const width = image.width * scale
+      const height = image.height * scale
+      context.drawImage(image, frameX + frameWidth / 2 - width / 2 + (crop.x / 100) * frameWidth, frameY + frameHeight / 2 - height / 2 + (crop.y / 100) * frameHeight, width, height)
+      const overlay = context.createLinearGradient(0, frameY + frameHeight * .4, 0, frameY + frameHeight)
+      overlay.addColorStop(0, 'rgba(8,11,37,0)')
+      overlay.addColorStop(.58, 'rgba(8,11,37,.72)')
+      overlay.addColorStop(1, 'rgba(8,11,37,.97)')
+      context.fillStyle = overlay
+      context.fillRect(frameX, frameY, frameWidth, frameHeight)
+      context.restore()
+    } else {
+      context.fillStyle = '#b7f36b'
+      roundedRect(context, frameX, frameY, frameWidth, frameHeight, frameRadius); context.fill()
+      context.fillStyle = '#17202a'
+      context.font = '900 86px Inter, sans-serif'
+      context.textAlign = 'center'; context.fillText(user.initials, frameX + frameWidth / 2, frameY + frameHeight / 2 + 28); context.textAlign = 'left'
+    }
+    context.strokeStyle = 'rgba(255,255,255,.68)'
+    context.lineWidth = 6
+    roundedRect(context, frameX, frameY, frameWidth, frameHeight, frameRadius); context.stroke()
+    context.fillStyle = '#ffffff'
+    context.font = '900 54px Inter, sans-serif'
+    context.textAlign = 'center'; context.shadowColor = 'rgba(0,0,0,.55)'; context.shadowBlur = 10; context.fillText(user.name, frameX + frameWidth / 2, frameY + frameHeight - 82)
+    context.fillStyle = 'rgba(255,255,255,.72)'
+    context.font = '600 25px Inter, sans-serif'
+    context.fillText('SHOWING UP, ONE DAY AT A TIME.', frameX + frameWidth / 2, frameY + frameHeight - 40)
+    context.shadowColor = 'transparent'; context.shadowBlur = 0; context.textAlign = 'left'
+    const streak = Math.max(0, ...snapshot.habits.map((habit) => getHabitStreak(habit.completedDates, habit.frequency, new Date(), user.timezone)))
+    const growth = snapshot.challenge21 ? challengeProgress(snapshot.challenge21) : 0
+    context.fillStyle = 'rgba(13,18,48,.42)'
+    roundedRect(context, 72, 1190, 936, 250, 34); context.fill()
+    context.fillStyle = '#b7f36b'; context.font = '900 72px Inter, sans-serif'; context.fillText(`${streak}`, 112, 1300)
+    context.fillStyle = '#ffffff'; context.font = '800 23px Inter, sans-serif'; context.fillText('DAY STREAK', 112, 1340)
+    context.fillStyle = '#ffffff'; context.font = '900 72px Inter, sans-serif'; context.fillText(`${growth}%`, 430, 1300)
+    context.font = '800 23px Inter, sans-serif'; context.fillText('TREE GROWN', 430, 1340)
+    context.fillStyle = '#ffffff'; context.font = '900 72px Inter, sans-serif'; context.fillText(`${user.level}`, 760, 1300)
+    context.font = '800 23px Inter, sans-serif'; context.fillText('FORGE LEVEL', 760, 1340)
+    context.fillStyle = 'rgba(255,255,255,.18)'; roundedRect(context, 72, 1490, 936, 18, 9); context.fill()
+    context.fillStyle = '#b7f36b'; roundedRect(context, 72, 1490, 936 * Math.max(.04, growth / 100), 18, 9); context.fill()
+    context.fillStyle = '#ffffff'; context.font = '800 28px Inter, sans-serif'; context.fillText('KEEP THE PROMISE SMALL.', 72, 1580)
+    context.fillStyle = 'rgba(255,255,255,.68)'; context.font = '600 22px Inter, sans-serif'; context.fillText('Consistency compounds.', 72, 1620)
+    context.fillStyle = 'rgba(255,255,255,.5)'; context.font = '600 18px Inter, sans-serif'; context.fillText('habitforge.app', 72, 1760)
+    canvas.toBlob((blob) => { if (!blob) return; const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `${user.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-grind-status.png`; link.click(); URL.revokeObjectURL(url) }, 'image/png')
+  }
+  if (user.grindPhoto) { image.onload = drawContent; image.src = user.grindPhoto } else drawContent()
+}
+
 const iconFor = (name: string) => iconMap[name] ?? Target
 
 function AmbientSpotlight() {
@@ -225,7 +315,7 @@ function DashboardView({ snapshot, onNavigate, onToggle, onOpenCreate }: { snaps
           <div>
             <div className="mb-3 flex items-center gap-2">
               <span className="hero-badge flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold tracking-wider uppercase shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-lime animate-pulse" /> Today’s focus
+                Today&apos;s focus
               </span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] text-white">Progress is a practice.</h3>
@@ -294,7 +384,7 @@ function DashboardView({ snapshot, onNavigate, onToggle, onOpenCreate }: { snaps
         </div>
         <div className="relative z-10 flex items-center justify-between border-t border-red-500/15 pt-3.5 text-sm font-semibold streak-footer">
           <span className="streak-footer-label">Best this season</span>
-          <span className="streak-best-badge font-mono font-bold text-sm px-2.5 py-0.5 rounded-md">21d</span>
+          <div className="flex items-center gap-2"><button onClick={() => downloadGrindStatus(snapshot.user, snapshot)} aria-label="Download my Grind Status card" className="streak-share-button"><Download size={13} /> <span>Download card</span></button><span className="streak-best-badge font-mono font-bold text-sm px-2.5 py-0.5 rounded-md">21d</span></div>
         </div>
       </div>
     </section>
@@ -595,13 +685,40 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
   return <div className="rounded-xl border border-white/[.1] bg-[#151720] px-3 py-2 shadow-xl"><p className="text-[10px] uppercase tracking-wider text-slate-600">{label}</p><p className="mt-1 font-mono text-sm text-white">{payload[0].value} <span className="font-sans text-[10px] text-slate-500">check-ins</span></p></div>
 }
 
+function GrindStatusCard({ user, snapshot, onDownload }: { user: User; snapshot: AppSnapshot; onDownload: () => void }) {
+  const streak = Math.max(0, ...snapshot.habits.map((habit) => getHabitStreak(habit.completedDates, habit.frequency, new Date(), user.timezone)))
+  const growth = snapshot.challenge21 ? challengeProgress(snapshot.challenge21) : 0
+  return <div className="grind-status-preview">
+    <div className="grind-status-glow grind-status-glow-one" /><div className="grind-status-glow grind-status-glow-two" />
+    <div className="relative z-10 flex items-center justify-between"><span className="grind-status-brand">HABITFORGE</span><span className="grind-status-kicker">GRIND STATUS</span></div>
+    <div className="grind-status-photo-wrap">{user.grindPhoto ? <img src={user.grindPhoto} alt={`${user.name}'s uploaded grind status portrait`} style={{ objectPosition: `${50 + (user.grindPhotoCrop?.x ?? 0)}% ${50 + (user.grindPhotoCrop?.y ?? 0)}%`, transform: `scale(${user.grindPhotoCrop?.scale ?? 1})` }} /> : <span>{user.initials}</span>}<div className="grind-status-photo-overlay"><h3>{user.name}</h3><p className="grind-status-tagline">SHOWING UP, ONE DAY AT A TIME.</p></div></div>
+    <div className="grind-status-stats"><div><strong>{streak}</strong><span>DAY STREAK</span></div><div><strong>{growth}%</strong><span>TREE GROWN</span></div><div><strong>{user.level}</strong><span>FORGE LEVEL</span></div></div>
+    <div className="grind-status-progress"><span style={{ width: `${Math.max(4, growth)}%` }} /></div><p className="grind-status-quote">KEEP THE PROMISE SMALL.</p><p className="grind-status-footer">Consistency compounds.</p>
+    <button onClick={onDownload} className="button button-primary grind-status-download"><Download size={15} /> Download share card</button>
+  </div>
+}
+
 function ProfileView({ snapshot, onNavigate, onLogout }: { snapshot: AppSnapshot; onNavigate: (path: string) => void; onLogout: () => void }) {
   const unlocked = achievements.filter((achievement) => snapshot.unlockedAchievementIds.includes(achievement.id))
   const locked = achievements.filter((achievement) => !snapshot.unlockedAchievementIds.includes(achievement.id))
   const history = buildActivity(snapshot.habits, new Date(), 8, snapshot.user.timezone).slice().reverse()
   const [editingProfile, setEditingProfile] = useState(false)
   const [profileDraft, setProfileDraft] = useState<User>(snapshot.user)
+  const [photoError, setPhotoError] = useState('')
   useEffect(() => setProfileDraft(snapshot.user), [snapshot.user])
+  const handleGrindPhoto = (file: File | undefined) => {
+    if (!file) return
+    if (!file.type.startsWith('image/')) { setPhotoError('Please choose an image file.'); return }
+    if (file.size > 1024 * 1024) { setPhotoError('Please choose an image below 1 MB.'); return }
+    const reader = new FileReader()
+    reader.onload = () => { const nextUser = { ...profileDraft, grindPhoto: String(reader.result) }; setProfileDraft(nextUser); window.dispatchEvent(new CustomEvent('habitforge:profile-save', { detail: nextUser })); setPhotoError('') }
+    reader.readAsDataURL(file)
+  }
+  const updateGrindCrop = (key: 'scale' | 'x' | 'y', value: number) => {
+    const nextUser = { ...profileDraft, grindPhotoCrop: { scale: profileDraft.grindPhotoCrop?.scale ?? 1, x: profileDraft.grindPhotoCrop?.x ?? 0, y: profileDraft.grindPhotoCrop?.y ?? 0, [key]: value } }
+    setProfileDraft(nextUser)
+    window.dispatchEvent(new CustomEvent('habitforge:profile-save', { detail: nextUser }))
+  }
   return (
     <div className="page-wrap">
       <section className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
@@ -616,6 +733,7 @@ function ProfileView({ snapshot, onNavigate, onLogout }: { snapshot: AppSnapshot
         </div>
         <div className="card p-6"><div className="mb-5 flex items-start justify-between"><div><p className="eyebrow">Identity arc</p><h3 className="mt-1 text-base font-semibold text-white">Your consistency, in milestones.</h3></div><Target size={18} className="text-violet" /></div><div className="space-y-5"><Milestone label="Joined the forge" detail="Aug 08, 2026" progress={100} color="#9B7DFF" /><Milestone label="First 50 check-ins" detail={`${Math.min(100, Math.round((totalCompletions(snapshot.habits) / 50) * 100))}% complete`} progress={Math.min(100, Math.round((totalCompletions(snapshot.habits) / 50) * 100))} color="#B7F36B" /><Milestone label="Reach level 5" detail={`${Math.round(levelProgress(snapshot.user.xp))}% of the way there`} progress={levelProgress(snapshot.user.xp)} color="#65D4FF" /></div></div>
       </div>
+      <section className="card grind-status-section mb-5 p-6 sm:p-8"><div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="eyebrow text-violet">Share your momentum</p><h3 className="mt-1 text-2xl font-bold text-white">Your Grind Status.</h3><p className="mt-2 max-w-lg text-sm leading-relaxed text-slate-500">Add a photo, make your progress visible, and share the proof you are building.</p></div><label className="button button-ghost cursor-pointer"><Plus size={14} /> {profileDraft.grindPhoto ? 'Change photo' : 'Add photo'}<input type="file" accept="image/*" className="sr-only" onChange={(event) => handleGrindPhoto(event.target.files?.[0])} /></label></div><div className="grid items-start gap-6 lg:grid-cols-[minmax(300px,390px)_1fr]"><GrindStatusCard user={profileDraft} snapshot={snapshot} onDownload={() => downloadGrindStatus(profileDraft, snapshot)} /><div className="grind-status-help"><div className="grind-status-upload-note"><div className="grind-status-upload-icon"><UserRound size={19} /></div><div><h4>Add your image</h4><p>Use a portrait, workout photo, or anything that feels like your current chapter. The image stays in your local profile data and is used only for this share card.</p></div></div>{profileDraft.grindPhoto && <div className="grind-crop-controls"><div className="grind-crop-heading"><h4>Adjust your crop</h4><button onClick={() => { const nextUser = { ...profileDraft, grindPhotoCrop: { scale: 1, x: 0, y: 0 } }; setProfileDraft(nextUser); window.dispatchEvent(new CustomEvent('habitforge:profile-save', { detail: nextUser })) }} className="link-button">Reset crop</button></div><label><span>Zoom</span><input type="range" min="1" max="2.2" step=".05" value={profileDraft.grindPhotoCrop?.scale ?? 1} onChange={(event) => updateGrindCrop('scale', Number(event.target.value))} /></label><label><span>Horizontal position</span><input type="range" min="-25" max="25" step="1" value={profileDraft.grindPhotoCrop?.x ?? 0} onChange={(event) => updateGrindCrop('x', Number(event.target.value))} /></label><label><span>Vertical position</span><input type="range" min="-25" max="25" step="1" value={profileDraft.grindPhotoCrop?.y ?? 0} onChange={(event) => updateGrindCrop('y', Number(event.target.value))} /></label></div>}<p className="mt-4 text-xs font-semibold text-slate-500">Image requirements: JPG, PNG, WebP, or AVIF · maximum 1 MB.</p>{photoError && <p role="alert" className="mt-3 text-xs font-bold text-rose-400">{photoError}</p>}</div></div></section>
       <div className="mb-5 grid gap-4 xl:grid-cols-[1.2fr_.8fr]">
         <div className="card p-6"><div className="mb-5 flex items-center justify-between"><div><p className="eyebrow">Badge collection</p><h3 className="mt-1 text-base font-semibold text-white">Proof you can see</h3></div><span className="font-mono text-xs text-slate-500">{unlocked.length}/{achievements.length}</span></div><div className="grid gap-3 sm:grid-cols-2">{[...unlocked, ...locked].map((achievement) => { const isUnlocked = snapshot.unlockedAchievementIds.includes(achievement.id); const color = achievement.color === 'lime' ? '#B7F36B' : achievement.color === 'orange' ? '#FFB86B' : achievement.color === 'blue' ? '#65D4FF' : '#9B7DFF'; return <div key={achievement.id} className={`flex items-center gap-3 rounded-xl border p-3 ${isUnlocked ? 'border-white/[.08] bg-white/[.025]' : 'border-white/[.05] bg-white/[.012] opacity-45'}`}><IconBubble name={achievement.icon} color={color} size="sm" /><div className="min-w-0 flex-1"><p className="text-xs font-medium text-slate-200">{achievement.title}</p><p className="mt-0.5 truncate text-[10px] text-slate-600">{isUnlocked ? achievement.description : achievement.requirement}</p></div>{isUnlocked && <Check size={14} className="text-lime" />}</div> })}</div></div>
         <div className="card p-6"><div className="mb-5 flex items-center justify-between"><div><p className="eyebrow">Plan</p><h3 className="mt-1 text-base font-semibold text-white">{snapshot.user.plan === 'premium' ? 'Premium' : 'Free tier'}</h3></div><WalletCards size={18} className={snapshot.user.plan === 'premium' ? 'text-lime' : 'text-violet'} /></div><p className="text-sm leading-relaxed text-slate-500">{snapshot.user.plan === 'premium' ? 'You’ve unlocked the full consistency field.' : 'The essentials are yours. Go deeper when you’re ready.'}</p><button onClick={() => onNavigate('/upgrade')} className="button button-ghost mt-5 w-full justify-center">Manage plan <ArrowUpRight size={14} /></button></div>

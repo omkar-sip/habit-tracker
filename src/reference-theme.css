@@ -96,6 +96,9 @@
   border: 0 !important;
   font-weight: 800 !important;
 }
+.streak-share-button { display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; padding: 5px 8px; color: rgba(255,255,255,.86); font-size: 10px; font-weight: 800; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+.streak-share-button:hover { border-color: rgba(255,255,255,.48); background: rgba(255,255,255,.16); transform: translateY(-1px); }
+@media (max-width: 640px) { .streak-share-button span { display: none; } .streak-share-button { padding: 6px; } }
 
 /* 2. HERO CARD: Rich Bold Green Canvas with Glowing Lime Target Transparent Icon */
 .light .hero-card {
@@ -492,7 +495,7 @@ li {
 /* Keep the hero headline in the same clean display family as the streak unit label. */
 .page-wrap .hero-card h3 {
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -.03em;
   text-transform: uppercase;
 }
@@ -771,3 +774,26 @@ html:not(.light) .sidebar-footer {
 .light .loop-card .habit-row p:last-child { color: #66708a !important; font-weight: 600; }
 .light .loop-card .habit-row .check-button { border-color: rgba(17,19,28,.15); background: rgba(255,255,255,.46); }
 .light .loop-card .habit-row .check-button-done { border-color: #a6ed3d; background: #a6ed3d; box-shadow: 0 0 16px rgba(166,237,61,.35); }
+
+/* Let the icons carry the emphasis without dark outlines or heavy row rails. */
+.light .loop-card .habit-row,
+.light .loop-card .habit-row:nth-child(1),
+.light .loop-card .habit-row:nth-child(2),
+.light .loop-card .habit-row:nth-child(3),
+.light .loop-card .habit-row:nth-child(4),
+.light .loop-card .habit-row-done {
+  box-shadow: 0 7px 16px rgba(49,55,117,.08) !important;
+}
+.light .loop-card .habit-row .icon-bubble {
+  border-color: transparent !important;
+  background: rgba(255,255,255,.28) !important;
+}
+.light .loop-card .habit-row .icon-bubble svg {
+  stroke-width: 2.45;
+}
+
+.grind-status-preview .grind-status-photo-overlay h3 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,.55) !important;
+}

@@ -1,6 +1,12 @@
 export type Frequency = 'daily' | 'weekly'
 export type Plan = 'free' | 'premium'
 
+export interface GrindPhotoCrop {
+  scale: number
+  x: number
+  y: number
+}
+
 export interface Habit {
   id: string
   name: string
@@ -25,6 +31,8 @@ export interface User {
   level: number
   joinedAt: string
   avatarColor: string
+  grindPhoto?: string
+  grindPhotoCrop?: GrindPhotoCrop
 }
 
 export interface Achievement {
