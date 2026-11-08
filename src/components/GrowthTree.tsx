@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 type GrowthTreeProps = { progress: number; stage: number }
@@ -75,16 +75,29 @@ const buildTree = (scene: THREE.Scene, progress: number, stage: number) => {
 
 export default function GrowthTree({ progress, stage }: GrowthTreeProps) {
   const mountRef = useRef<HTMLDivElement>(null)
+  const [fallback, setFallback] = useState(false)
 
   useEffect(() => {
     const mount = mountRef.current
     if (!mount) return
+    const probe = document.createElement('canvas')
+    const webgl = probe.getContext('webgl2') || probe.getContext('webgl') || probe.getContext('experimental-webgl')
+    if (!webgl) {
+      setFallback(true)
+      return
+    }
     const scene = new THREE.Scene()
     scene.fog = new THREE.Fog(0x10261a, 7, 14)
     const camera = new THREE.PerspectiveCamera(30, 1, .1, 40)
     camera.position.set(0, 2.15, 11.4)
     camera.lookAt(0, 1.55, 0)
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    } catch {
+      setFallback(true)
+      return
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
@@ -135,5 +148,6 @@ export default function GrowthTree({ progress, stage }: GrowthTreeProps) {
     }
   }, [progress, stage])
 
+  if (fallback) return <div className="growth-tree-fallback" role="img" aria-label={`Tree growth progress at ${progress}%`}><div className="growth-tree-fallback-canopy"><span /><span /><span /></div><div className="growth-tree-fallback-trunk" /><p>3D preview unavailable on this device</p></div>
   return <div ref={mountRef} className="growth-tree-canvas" data-growth-stage={stage} aria-label={`Three dimensional growth tree at ${progress}% progress`} />
 }

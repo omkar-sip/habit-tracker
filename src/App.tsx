@@ -12,7 +12,7 @@ import { seedUser, createSeedSnapshot } from './data/seed'
 import { achievements, buildActivity, levelForXp, levelProgress, totalCompletions, xpRangeForLevel, XP_PER_COMPLETION, unlockedAchievementIds } from './lib/gamification'
 import { addDays, currentPeriodKeys, dateKey, formatLongDate, formatShortDate, getHabitStreak, getLastNDays, isCompletedThisPeriod, startOfWeekKey, weekPeriodKey } from './lib/date'
 import { downloadHabitCsv } from './lib/export'
-import type { AppSnapshot, Challenge21, Habit, HabitDraft, Plan } from './types'
+import type { AppSnapshot, Challenge21, Habit, HabitDraft, Plan, User } from './types'
 import GrowthTree from './components/GrowthTree'
 import './styles.css'
 import './reference-theme.css'
@@ -104,6 +104,30 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
   </motion.div>
 }
 
+function SearchPalette({ query, onQuery, snapshot, onClose, onNavigate }: { query: string; onQuery: (value: string) => void; snapshot?: AppSnapshot; onClose: () => void; onNavigate: (path: string) => void }) {
+  const navigation = [
+    { label: 'Overview', description: 'Your daily proof and momentum', path: '/dashboard' },
+    { label: 'My habits', description: 'Create and check in on habits', path: '/habits' },
+    { label: '21-day growth', description: 'Build your tree through consistency', path: '/21-days' },
+    { label: 'Analytics', description: 'See your patterns over time', path: '/analytics' },
+    { label: 'Profile', description: 'Your identity and progress', path: '/profile' }
+  ]
+  const habitResults = (snapshot?.habits ?? []).map((habit) => ({ label: habit.name, description: `${habit.category} · ${habit.frequency} habit`, path: '/habits' }))
+  const results = [...navigation, ...habitResults].filter((item) => `${item.label} ${item.description}`.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
+  return <div className="modal-backdrop search-backdrop" onMouseDown={(event) => { if (event.currentTarget === event.target) onClose() }}><div className="search-palette" role="dialog" aria-modal="true" aria-labelledby="search-title"><div className="flex items-center gap-3 border-b border-white/[.08] px-4 py-3"><Search size={17} className="text-slate-500" /><input autoFocus value={query} onChange={(event) => onQuery(event.target.value)} onKeyDown={(event) => { if (event.key === 'Escape') onClose() }} placeholder="Search habits and pages..." aria-label="Search habits and pages" /><kbd>Esc</kbd></div><div className="p-2"><p id="search-title" className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.16em] text-slate-600">Search results</p>{results.length ? results.map((item) => <button key={`${item.path}-${item.label}`} onClick={() => { onNavigate(item.path); onClose() }} className="search-result"><span className="search-result-icon"><ArrowUpRight size={15} /></span><span><strong>{item.label}</strong><small>{item.description}</small></span></button>) : <p className="px-3 py-6 text-center text-sm text-slate-500">No matching habits or pages.</p>}</div></div></div>
+}
+
+function NotificationPanel({ snapshot, onClose, onRead }: { snapshot?: AppSnapshot; onClose: () => void; onRead: () => void }) {
+  const challenge = snapshot?.challenge21
+  const today = snapshot ? dateKey(new Date(), snapshot.user.timezone) : dateKey()
+  const challengeDone = challenge ? challenge.tasks.filter((task) => task.completedDays.includes(today)).length : 0
+  const notifications = [
+    { title: challengeDone === challenge?.tasks.length ? 'All growth tasks complete' : 'Your tree is waiting for today’s roots', detail: challenge ? `${challengeDone}/${challenge.tasks.length} 21-day tasks checked today.` : 'Open the growth module to begin.' },
+    { title: 'Keep the streak alive', detail: 'A small check-in today keeps your momentum visible.' }
+  ]
+  return <div className="notification-panel" role="dialog" aria-label="Notifications"><div className="flex items-center justify-between border-b border-white/[.08] px-4 py-3"><div><p className="eyebrow">Inbox</p><h2 className="mt-1 text-sm font-bold text-white">Notifications</h2></div><button onClick={onClose} className="icon-button" aria-label="Close notifications"><X size={15} /></button></div><div className="p-2">{notifications.map((item) => <div key={item.title} className="notification-item"><span className="notification-dot" /><div><p className="text-xs font-bold text-slate-200">{item.title}</p><p className="mt-1 text-[11px] leading-relaxed text-slate-500">{item.detail}</p></div></div>)}</div><button onClick={onRead} className="w-full border-t border-white/[.08] px-4 py-3 text-left text-[10px] font-bold uppercase tracking-[.14em] text-lime hover:bg-white/[.03]">Mark all as read</button></div>
+}
+
 function Sidebar({ activePath, onNavigate, onLogout, user, collapsed, onToggle }: { activePath: string; onNavigate: (path: string) => void; onLogout: () => void; user: AppSnapshot['user']; collapsed: boolean; onToggle: () => void }) {
   const primary = [
     { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -146,8 +170,27 @@ function NavItem({ item, activePath, onNavigate, collapsed = false }: { item: { 
   return <button onClick={() => onNavigate(item.path)} title={collapsed ? item.label : undefined} className={`nav-item sidebar-nav-item group flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm transition ${active ? 'nav-item-active text-white' : 'text-slate-500 hover:bg-white/[.04] hover:text-slate-200'}`}><Icon size={17} strokeWidth={active ? 2.3 : 1.8} /><span className="nav-label min-w-0 flex-1 truncate text-left">{item.label}</span>{item.path === '/analytics' && <span className="nav-pro ml-auto rounded-md border border-violet/25 bg-violet/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-violet">Pro</span>}</button>
 }
 
-function Topbar({ title, onTheme, dark, onMenu, onNavigate, user, collapsed }: { title: string; onTheme: () => void; dark: boolean; onMenu: () => void; onNavigate: (path: string) => void; user: AppSnapshot['user']; collapsed: boolean }) {
+function LegacyTopbar({ title, onTheme, dark, onMenu, onNavigate, user, collapsed }: { title: string; onTheme: () => void; dark: boolean; onMenu: () => void; onNavigate: (path: string) => void; user: AppSnapshot['user']; collapsed: boolean }) {
   return <header className={`topbar sticky top-0 z-20 flex h-[74px] items-center justify-between border-b border-white/[.06] bg-[#0b0c10]/70 px-5 backdrop-blur-xl sm:px-8 lg:px-10 ${collapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}`}><div className="flex items-center gap-3"><button onClick={onMenu} className="rounded-lg p-2 text-slate-400 hover:bg-white/[.05] lg:hidden"><Menu size={19} /></button><div><p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-600">Workspace / {title}</p><h1 className="mt-1 text-base font-semibold tracking-[-.02em] text-white sm:text-lg">{title}</h1></div></div><div className="flex items-center gap-2 sm:gap-4"><button className="hidden items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.03] px-3 py-2 text-xs text-slate-500 transition hover:border-white/[.14] hover:text-slate-300 md:flex"><Search size={14} /> <span>Search</span><span className="ml-3 font-mono text-[10px] text-slate-600">⌘ K</span></button><button onClick={onTheme} aria-label="Toggle theme" className="rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:border-white/[.16] hover:bg-white/[.04] hover:text-white">{dark ? <Sun size={16} /> : <Moon size={16} />}</button><button className="relative rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:bg-white/[.04] hover:text-white"><Bell size={16} /><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-lime" /></button><button onClick={() => onNavigate('/profile')} className="avatar avatar-sm" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</button></div></header>
+}
+
+function StaticTopbar({ title, onTheme, dark, onMenu, onNavigate, onSearch, onNotifications, user, collapsed }: { title: string; onTheme: () => void; dark: boolean; onMenu: () => void; onNavigate: (path: string) => void; onSearch: () => void; onNotifications: () => void; user: AppSnapshot['user']; collapsed: boolean }) {
+  return <header className={`topbar sticky top-0 z-20 flex h-[74px] items-center justify-between border-b border-white/[.06] bg-[#0b0c10]/70 px-5 backdrop-blur-xl sm:px-8 lg:px-10 ${collapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}`}><div className="flex items-center gap-3"><button onClick={onMenu} aria-label="Open navigation menu" className="rounded-lg p-2 text-slate-400 hover:bg-white/[.05] lg:hidden"><Menu size={19} /></button><div><p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-600">Workspace / {title}</p><h1 className="mt-1 text-base font-semibold tracking-[-.02em] text-white sm:text-lg">{title}</h1></div></div><div className="flex items-center gap-2 sm:gap-4"><button onClick={onSearch} aria-label="Search habits and pages" className="hidden items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.03] px-3 py-2 text-xs text-slate-500 transition hover:border-white/[.14] hover:text-slate-300 md:flex"><Search size={14} /><span>Search</span><span className="ml-3 font-mono text-[10px] text-slate-600">⌘ K</span></button><button onClick={onTheme} aria-label="Toggle theme" className="rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:border-white/[.16] hover:bg-white/[.04] hover:text-white">{dark ? <Sun size={16} /> : <Moon size={16} />}</button><button onClick={onNotifications} aria-label="Open notifications" className="relative rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:bg-white/[.04] hover:text-white"><Bell size={16} /><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-lime" /></button><button onClick={() => onNavigate('/profile')} aria-label={`Open profile for ${user.name}`} className="avatar avatar-sm" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</button></div></header>
+}
+
+function Topbar({ title, onTheme, dark, onMenu, onNavigate, user, collapsed }: { title: string; onTheme: () => void; dark: boolean; onMenu: () => void; onNavigate: (path: string) => void; user: AppSnapshot['user']; collapsed: boolean }) {
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const searchSnapshot = loadSnapshot()
+  return <>
+    <header className={`topbar sticky top-0 z-20 flex h-[74px] items-center justify-between border-b border-white/[.06] bg-[#0b0c10]/70 px-5 backdrop-blur-xl sm:px-8 lg:px-10 ${collapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}`}>
+      <div className="flex items-center gap-3"><button onClick={onMenu} aria-label="Open navigation menu" className="rounded-lg p-2 text-slate-400 hover:bg-white/[.05] lg:hidden"><Menu size={19} /></button><div><p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-600">Workspace / {title}</p><h1 className="mt-1 text-base font-semibold tracking-[-.02em] text-white sm:text-lg">{title}</h1></div></div>
+      <div className="flex items-center gap-2 sm:gap-4"><button onClick={() => { setSearchOpen(true); setNotificationsOpen(false) }} aria-label="Search habits and pages" className="hidden items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.03] px-3 py-2 text-xs text-slate-500 transition hover:border-white/[.14] hover:text-slate-300 md:flex"><Search size={14} /><span>Search</span><span className="ml-3 font-mono text-[10px] text-slate-600">⌘ K</span></button><button onClick={onTheme} aria-label="Toggle theme" className="rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:border-white/[.16] hover:bg-white/[.04] hover:text-white">{dark ? <Sun size={16} /> : <Moon size={16} />}</button><button onClick={() => { setNotificationsOpen((value) => !value); setSearchOpen(false) }} aria-label="Open notifications" aria-expanded={notificationsOpen} className="relative rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:bg-white/[.04] hover:text-white"><Bell size={16} /><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-lime" /></button><button onClick={() => onNavigate('/profile')} aria-label={`Open profile for ${user.name}`} className="avatar avatar-sm" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</button></div>
+    </header>
+    {searchOpen && <SearchPalette query={query} onQuery={setQuery} snapshot={searchSnapshot} onClose={() => { setSearchOpen(false); setQuery('') }} onNavigate={onNavigate} />}
+    {notificationsOpen && <NotificationPanel snapshot={searchSnapshot} onClose={() => setNotificationsOpen(false)} onRead={() => setNotificationsOpen(false)} />}
+  </>
 }
 
 function DashboardView({ snapshot, onNavigate, onToggle, onOpenCreate }: { snapshot: AppSnapshot; onNavigate: (path: string) => void; onToggle: (id: string) => void; onOpenCreate: () => void }) {
@@ -555,12 +598,16 @@ function ProfileView({ snapshot, onNavigate, onLogout }: { snapshot: AppSnapshot
   const unlocked = achievements.filter((achievement) => snapshot.unlockedAchievementIds.includes(achievement.id))
   const locked = achievements.filter((achievement) => !snapshot.unlockedAchievementIds.includes(achievement.id))
   const history = buildActivity(snapshot.habits, new Date(), 8, snapshot.user.timezone).slice().reverse()
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [profileDraft, setProfileDraft] = useState<User>(snapshot.user)
+  useEffect(() => setProfileDraft(snapshot.user), [snapshot.user])
   return (
     <div className="page-wrap">
       <section className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
         <div><p className="eyebrow text-violet">Your forge</p><h2 className="page-title">Profile & progress.</h2><p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-500">A record of the promises you’ve kept — and the next ones worth making.</p></div>
-        <button onClick={onLogout} className="button button-ghost self-start md:self-auto"><LogOut size={15} /> Sign out</button>
+        <div className="flex flex-wrap gap-2 self-start md:self-auto"><button onClick={() => setEditingProfile((value) => !value)} className="button button-ghost"><Pencil size={14} /> {editingProfile ? 'Close editor' : 'Edit profile'}</button><button onClick={onLogout} className="button button-ghost"><LogOut size={15} /> Sign out</button></div>
       </section>
+      {editingProfile && <section className="card mb-5 p-6"><div className="mb-5"><p className="eyebrow text-violet">Identity settings</p><h3 className="mt-1 text-xl font-bold text-white">Keep your profile current.</h3></div><div className="grid gap-4 sm:grid-cols-2"><label className="field"><span>Name</span><input value={profileDraft.name} onChange={(event) => setProfileDraft((value) => ({ ...value, name: event.target.value }))} /></label><label className="field"><span>Email</span><input type="email" value={profileDraft.email} onChange={(event) => setProfileDraft((value) => ({ ...value, email: event.target.value }))} /></label><label className="field"><span>Timezone</span><input value={profileDraft.timezone} onChange={(event) => setProfileDraft((value) => ({ ...value, timezone: event.target.value }))} /></label><label className="field"><span>Avatar color</span><input type="color" value={profileDraft.avatarColor} onChange={(event) => setProfileDraft((value) => ({ ...value, avatarColor: event.target.value }))} /></label></div><div className="mt-5 flex justify-end gap-2"><button onClick={() => { setProfileDraft(snapshot.user); setEditingProfile(false) }} className="button button-ghost">Cancel</button><button onClick={() => { const name = profileDraft.name.trim() || snapshot.user.name; window.dispatchEvent(new CustomEvent('habitforge:profile-save', { detail: { ...profileDraft, name, initials: name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase() } })); setEditingProfile(false) }} className="button button-primary"><Check size={14} /> Save profile</button></div></section>}
       <div className="mb-5 grid gap-4 xl:grid-cols-[.9fr_1.1fr]">
         <div className="card overflow-hidden p-6">
           <div className="flex items-center gap-4"><div className="avatar avatar-xl" style={{ background: `linear-gradient(135deg, ${snapshot.user.avatarColor}, #4e3b9b)` }}>{snapshot.user.initials}</div><div><h3 className="text-xl font-semibold text-white">{snapshot.user.name}</h3><p className="mt-1 text-sm text-slate-500">{snapshot.user.email}</p><p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-600"><Globe2 size={12} /> {snapshot.user.timezone}</p></div></div>
@@ -609,6 +656,7 @@ export default function App() {
 
   useEffect(() => { document.documentElement.classList.toggle('light', !dark); window.localStorage.setItem('habitforge.theme.v2', dark ? 'dark' : 'light') }, [dark])
   useEffect(() => { window.localStorage.setItem('habitforge.snapshot', JSON.stringify(snapshot)) }, [snapshot])
+  useEffect(() => { const onProfileSave = (event: Event) => { const user = (event as CustomEvent<User>).detail; setSnapshot((current) => ({ ...current, user })) ; setToast('Profile updated') }; window.addEventListener('habitforge:profile-save', onProfileSave); return () => window.removeEventListener('habitforge:profile-save', onProfileSave) }, [])
   useEffect(() => { if (session && !window.localStorage.getItem('habitforge.token')) { fetch('/api/auth/demo').then((response) => response.json()).then((data: { token: string }) => window.localStorage.setItem('habitforge.token', data.token)).catch(() => undefined) } }, [session])
   useEffect(() => { const onPop = () => setActivePath(window.location.pathname === '/' ? '/dashboard' : window.location.pathname); window.addEventListener('popstate', onPop); return () => window.removeEventListener('popstate', onPop) }, [])
   useEffect(() => { if (!toast) return; const timer = window.setTimeout(() => setToast(''), 3200); return () => window.clearTimeout(timer) }, [toast])
