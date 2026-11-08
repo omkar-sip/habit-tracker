@@ -188,6 +188,11 @@ function DashboardView({ snapshot, onNavigate, onToggle, onOpenCreate }: { snaps
             <p className="mt-2.5 max-w-md text-sm sm:text-base font-medium leading-relaxed text-white/95">
               One clean check-in at a time. You’ve got <span className="font-bold text-lime underline decoration-lime/50">{snapshot.habits.length - completed} move{snapshot.habits.length - completed === 1 ? '' : 's'}</span> left in your loop.
             </p>
+            {snapshot.challenge21 && <button onClick={() => onNavigate('/21-days')} className="overview-growth-link mt-5 flex w-full max-w-md items-center gap-3 rounded-2xl border border-white/15 bg-black/10 p-3 text-left transition hover:bg-black/20">
+              <span className="overview-growth-icon"><TreePine size={19} strokeWidth={1.8} /></span>
+              <span className="min-w-0 flex-1"><span className="block text-[10px] font-extrabold uppercase tracking-[.16em] text-lime/80">21-day growth</span><span className="mt-0.5 block text-xs font-semibold text-white/90">Your tree is {challengeProgress(snapshot.challenge21)}% grown</span><span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-white/15"><span className="block h-full rounded-full bg-lime transition-all" style={{ width: `${challengeProgress(snapshot.challenge21)}%` }} /></span></span>
+              <ArrowUpRight size={15} className="shrink-0 text-lime" />
+            </button>}
             <div className="mt-6 flex items-center gap-4">
               <div className="flex -space-x-2">
                 {snapshot.habits.slice(0, 4).map((habit) => (
