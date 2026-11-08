@@ -269,15 +269,45 @@ function StaticTopbar({ title, onTheme, dark, onMenu, onNavigate, onSearch, onNo
   return <header className={`topbar sticky top-0 z-20 flex h-[74px] items-center justify-between border-b border-white/[.06] bg-[#0b0c10]/70 px-5 backdrop-blur-xl sm:px-8 lg:px-10 ${collapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}`}><div className="flex items-center gap-3"><button onClick={onMenu} aria-label="Open navigation menu" className="rounded-lg p-2 text-slate-400 hover:bg-white/[.05] lg:hidden"><Menu size={19} /></button><div><p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-600">Workspace / {title}</p><h1 className="mt-1 text-base font-semibold tracking-[-.02em] text-white sm:text-lg">{title}</h1></div></div><div className="flex items-center gap-2 sm:gap-4"><button onClick={onSearch} aria-label="Search habits and pages" className="hidden items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.03] px-3 py-2 text-xs text-slate-500 transition hover:border-white/[.14] hover:text-slate-300 md:flex"><Search size={14} /><span>Search</span><span className="ml-3 font-mono text-[10px] text-slate-600">⌘ K</span></button><button onClick={onTheme} aria-label="Toggle theme" className="rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:border-white/[.16] hover:bg-white/[.04] hover:text-white">{dark ? <Sun size={16} /> : <Moon size={16} />}</button><button onClick={onNotifications} aria-label="Open notifications" className="relative rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:bg-white/[.04] hover:text-white"><Bell size={16} /><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-lime" /></button><button onClick={() => onNavigate('/profile')} aria-label={`Open profile for ${user.name}`} className="avatar avatar-sm" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</button></div></header>
 }
 
-function Topbar({ title, onTheme, dark, onMenu, onNavigate, user, collapsed }: { title: string; onTheme: () => void; dark: boolean; onMenu: () => void; onNavigate: (path: string) => void; user: AppSnapshot['user']; collapsed: boolean }) {
+function Topbar({ title, onTheme, dark, onMenu, onNavigate, onLogout, user, collapsed }: { title: string; onTheme: () => void; dark: boolean; onMenu: () => void; onNavigate: (path: string) => void; onLogout: () => void; user: AppSnapshot['user']; collapsed: boolean }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false)
   const searchSnapshot = loadSnapshot()
   return <>
     <header className={`topbar sticky top-0 z-20 flex h-[74px] items-center justify-between border-b border-white/[.06] bg-[#0b0c10]/70 px-5 backdrop-blur-xl sm:px-8 lg:px-10 ${collapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}`}>
       <div className="flex items-center gap-3"><button onClick={onMenu} aria-label="Open navigation menu" className="rounded-lg p-2 text-slate-400 hover:bg-white/[.05] lg:hidden"><Menu size={19} /></button><div><p className="text-[10px] font-semibold uppercase tracking-[.2em] text-slate-600">Workspace / {title}</p><h1 className="mt-1 text-base font-semibold tracking-[-.02em] text-white sm:text-lg">{title}</h1></div></div>
-      <div className="flex items-center gap-2 sm:gap-4"><button onClick={() => { setSearchOpen(true); setNotificationsOpen(false) }} aria-label="Search habits and pages" className="hidden items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.03] px-3 py-2 text-xs text-slate-500 transition hover:border-white/[.14] hover:text-slate-300 md:flex"><Search size={14} /><span>Search</span><span className="ml-3 font-mono text-[10px] text-slate-600">⌘ K</span></button><button onClick={onTheme} aria-label="Toggle theme" className="rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:border-white/[.16] hover:bg-white/[.04] hover:text-white">{dark ? <Sun size={16} /> : <Moon size={16} />}</button><button onClick={() => { setNotificationsOpen((value) => !value); setSearchOpen(false) }} aria-label="Open notifications" aria-expanded={notificationsOpen} className="relative rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:bg-white/[.04] hover:text-white"><Bell size={16} /><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-lime" /></button><button onClick={() => onNavigate('/profile')} aria-label={`Open profile for ${user.name}`} className="avatar avatar-sm" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</button></div>
+      <div className="relative flex items-center gap-2 sm:gap-4"><button onClick={() => { setSearchOpen(true); setNotificationsOpen(false); setAccountMenuOpen(false) }} aria-label="Search habits and pages" className="hidden items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.03] px-3 py-2 text-xs text-slate-500 transition hover:border-white/[.14] hover:text-slate-300 md:flex"><Search size={14} /><span>Search</span><span className="ml-3 font-mono text-[10px] text-slate-600">⌘ K</span></button><button onClick={onTheme} aria-label="Toggle theme" className="rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:border-white/[.16] hover:bg-white/[.04] hover:text-white">{dark ? <Sun size={16} /> : <Moon size={16} />}</button><button onClick={() => { setNotificationsOpen((value) => !value); setSearchOpen(false); setAccountMenuOpen(false) }} aria-label="Open notifications" aria-expanded={notificationsOpen} className="relative rounded-lg border border-white/[.08] p-2 text-slate-400 transition hover:bg-white/[.04] hover:text-white"><Bell size={16} /><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-lime" /></button><button onClick={() => { setAccountMenuOpen((value) => !value); setSearchOpen(false); setNotificationsOpen(false) }} aria-label={`Open account menu for ${user.name}`} aria-expanded={accountMenuOpen} className="avatar avatar-sm ring-offset-2 hover:ring-2 hover:ring-white/20 transition cursor-pointer" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</button>
+        {accountMenuOpen && <>
+          <div className="fixed inset-0 z-40" onClick={() => setAccountMenuOpen(false)} aria-hidden="true" />
+          <div className="account-dropdown absolute right-0 top-[calc(100%+10px)] z-50 w-64 rounded-2xl border border-white/[.1] bg-[#12141b]/98 p-3 shadow-2xl backdrop-blur-xl" role="menu">
+            <div className="flex items-center gap-3 border-b border-white/[.08] px-2 pb-3">
+              <span className="avatar avatar-md shrink-0" style={{ background: `linear-gradient(135deg, ${user.avatarColor}, #4e3b9b)` }}>{user.initials}</span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-bold text-white">{user.name}</p>
+                <p className="truncate text-[11px] text-slate-400">{user.email}</p>
+                <span className="mt-1 inline-block rounded-md border border-violet/25 bg-violet/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-violet">
+                  {user.plan === 'premium' ? 'Premium member' : 'Free tier'} · LVL {user.level}
+                </span>
+              </div>
+            </div>
+            <div className="py-2 space-y-1">
+              <button onClick={() => { setAccountMenuOpen(false); onNavigate('/profile') }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-300 hover:bg-white/[.06] hover:text-white transition">
+                <UserRound size={15} /><span>Profile & progress</span>
+              </button>
+              <button onClick={() => { setAccountMenuOpen(false); onNavigate('/upgrade') }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-300 hover:bg-white/[.06] hover:text-white transition">
+                <Zap size={15} /><span>Upgrade plan</span>
+              </button>
+            </div>
+            <div className="border-t border-white/[.08] pt-2">
+              <button onClick={() => { setAccountMenuOpen(false); onLogout() }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition">
+                <LogOut size={15} /><span>Sign out</span>
+              </button>
+            </div>
+          </div>
+        </>}
+      </div>
     </header>
     {searchOpen && <SearchPalette query={query} onQuery={setQuery} snapshot={searchSnapshot} onClose={() => { setSearchOpen(false); setQuery('') }} onNavigate={onNavigate} />}
     {notificationsOpen && <NotificationPanel snapshot={searchSnapshot} onClose={() => setNotificationsOpen(false)} onRead={() => setNotificationsOpen(false)} />}
@@ -830,5 +860,40 @@ export default function App() {
 
   if (!session || activePath === '/login') return <><LoginView onLogin={login} /><AnimatePresence>{toast && <Toast message={toast} onClose={() => setToast('')} />}</AnimatePresence></>
 
-  return <div className="min-h-screen"><AmbientSpotlight /><Sidebar activePath={activePath} onNavigate={navigate} onLogout={logout} user={snapshot.user} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><Topbar title={currentTitle} onTheme={() => setDark((value) => !value)} dark={dark} onMenu={() => setMobileNav((value) => !value)} onNavigate={navigate} user={snapshot.user} collapsed={sidebarCollapsed} />{mobileNav && <div className="mobile-nav fixed inset-x-4 top-[82px] z-30 rounded-2xl border border-white/[.1] bg-[#12141b]/95 p-3 shadow-2xl backdrop-blur-xl lg:hidden"><NavItem item={{ path: '/dashboard', label: 'Overview', icon: LayoutDashboard }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/habits', label: 'My habits', icon: Target }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/21-days', label: '21-day growth', icon: TreePine }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/analytics', label: 'Analytics', icon: BarChart3 }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/profile', label: 'Profile', icon: UserRound }} activePath={activePath} onNavigate={navigate} /></div>}<main className={sidebarCollapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}>{activePath === '/habits' && <HabitsView snapshot={snapshot} onToggle={toggleHabit} onOpenCreate={openCreate} onEdit={openEdit} onDelete={deleteHabit} />}{activePath === '/21-days' && <ChallengeView snapshot={snapshot} onSave={saveChallenge} onToggle={toggleChallengeTask} onRestart={restartChallenge} />}{activePath === '/analytics' && <AnalyticsView snapshot={snapshot} onNavigate={navigate} onExport={() => snapshot.user.plan === 'premium' ? downloadHabitCsv(snapshot.habits) : (setToast('CSV export is a Premium feature'), navigate('/upgrade'))} />}{activePath === '/profile' && <ProfileView snapshot={snapshot} onNavigate={navigate} onLogout={logout} />}{activePath === '/upgrade' && <UpgradeView onBack={() => navigate('/dashboard')} onToast={setToast} />}{(activePath === '/dashboard' || activePath === '/') && <DashboardView snapshot={snapshot} onNavigate={navigate} onToggle={toggleHabit} onOpenCreate={openCreate} />}</main><AnimatePresence>{modalOpen && <HabitModal editing={editing} onClose={() => { setModalOpen(false); setEditing(null) }} onSave={saveHabit} />}{toast && <Toast message={toast} onClose={() => setToast('')} />}</AnimatePresence></div>
+  return <div className="min-h-screen">
+    <AmbientSpotlight />
+    <Sidebar activePath={activePath} onNavigate={navigate} onLogout={logout} user={snapshot.user} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} />
+    <Topbar title={currentTitle} onTheme={() => setDark((value) => !value)} dark={dark} onMenu={() => setMobileNav((value) => !value)} onNavigate={navigate} onLogout={logout} user={snapshot.user} collapsed={sidebarCollapsed} />
+    {mobileNav && <>
+      <div className="mobile-nav-backdrop fixed inset-0 z-20 bg-black/50 backdrop-blur-xs lg:hidden" onClick={() => setMobileNav(false)} aria-hidden="true" />
+      <div className="mobile-nav fixed inset-x-4 top-[82px] z-30 max-h-[calc(100vh-100px)] overflow-y-auto rounded-2xl border border-white/[.1] bg-[#12141b]/98 p-3 shadow-2xl backdrop-blur-xl lg:hidden">
+        <div className="mobile-nav-section-label mb-2 px-3 pt-1 text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">Workspace</div>
+        <nav className="space-y-1">
+          <NavItem item={{ path: '/dashboard', label: 'Overview', icon: LayoutDashboard }} activePath={activePath} onNavigate={navigate} />
+          <NavItem item={{ path: '/habits', label: 'My habits', icon: Target }} activePath={activePath} onNavigate={navigate} />
+          <NavItem item={{ path: '/21-days', label: '21-day growth', icon: TreePine }} activePath={activePath} onNavigate={navigate} />
+          <NavItem item={{ path: '/analytics', label: 'Analytics', icon: BarChart3 }} activePath={activePath} onNavigate={navigate} />
+        </nav>
+        <div className="mobile-nav-section-label mb-2 mt-3 border-t border-white/[.08] px-3 pt-2 text-[10px] font-semibold uppercase tracking-[.2em] text-slate-500">Account</div>
+        <nav className="space-y-1">
+          <NavItem item={{ path: '/profile', label: 'Profile', icon: UserRound }} activePath={activePath} onNavigate={navigate} />
+          <NavItem item={{ path: '/upgrade', label: 'Upgrade', icon: Zap }} activePath={activePath} onNavigate={navigate} />
+        </nav>
+        <div className="mobile-nav-footer mt-3 border-t border-white/[.08] pt-3">
+          <button onClick={() => navigate('/profile')} className="mobile-profile-link flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-white/[.05]">
+            <span className="avatar avatar-sm" style={{ background: `linear-gradient(135deg, ${snapshot.user.avatarColor}, #4e3b9b)` }}>{snapshot.user.initials}</span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-xs font-semibold text-slate-200">{snapshot.user.name}</span>
+              <span className="block text-[10px] text-slate-500">{snapshot.user.plan === 'premium' ? 'Premium member' : 'Free member'} · LVL {snapshot.user.level}</span>
+            </span>
+            <ChevronRight size={15} className="text-slate-600" />
+          </button>
+          <button onClick={() => { setMobileNav(false); logout() }} className="mobile-logout-btn mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-rose-400 transition hover:bg-rose-500/10 hover:text-rose-300">
+            <LogOut size={15} />
+            <span>Sign out</span>
+          </button>
+        </div>
+      </div>
+    </>}
+    <main className={sidebarCollapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}>{activePath === '/habits' && <HabitsView snapshot={snapshot} onToggle={toggleHabit} onOpenCreate={openCreate} onEdit={openEdit} onDelete={deleteHabit} />}{activePath === '/21-days' && <ChallengeView snapshot={snapshot} onSave={saveChallenge} onToggle={toggleChallengeTask} onRestart={restartChallenge} />}{activePath === '/analytics' && <AnalyticsView snapshot={snapshot} onNavigate={navigate} onExport={() => snapshot.user.plan === 'premium' ? downloadHabitCsv(snapshot.habits) : (setToast('CSV export is a Premium feature'), navigate('/upgrade'))} />}{activePath === '/profile' && <ProfileView snapshot={snapshot} onNavigate={navigate} onLogout={logout} />}{activePath === '/upgrade' && <UpgradeView onBack={() => navigate('/dashboard')} onToast={setToast} />}{(activePath === '/dashboard' || activePath === '/') && <DashboardView snapshot={snapshot} onNavigate={navigate} onToggle={toggleHabit} onOpenCreate={openCreate} />}</main><AnimatePresence>{modalOpen && <HabitModal editing={editing} onClose={() => { setModalOpen(false); setEditing(null) }} onSave={saveHabit} />}{toast && <Toast message={toast} onClose={() => setToast('')} />}</AnimatePresence></div>
 }

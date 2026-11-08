@@ -292,9 +292,30 @@
 .light .segmented { border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.12); }
 .light .segmented button { color: rgba(255,255,255,.78); }
 .light .segmented .active { background: #fff; color: #3c44d9; }
-.light .mobile-nav { background: #fff; border: 0; border-radius: 22px; box-shadow: 0 12px 30px rgba(37,44,157,.12); }
+.light .mobile-nav { background: #fff; border: 1px solid rgba(17,19,28,.08); border-radius: 22px; box-shadow: 0 12px 30px rgba(37,44,157,.12); }
 .light .mobile-nav .nav-item-active { background: rgba(86,96,232,.12); color: #3943d2 !important; }
 .light .mobile-nav .nav-item-active::before { background: #5660e8; }
+.light .mobile-nav .nav-item:not(.nav-item-active) { color: #4b5267 !important; }
+.light .mobile-nav .nav-item:not(.nav-item-active):hover { background: rgba(86,96,232,.06); color: #11131c !important; }
+.light .mobile-nav .mobile-nav-section-label { color: #78809b !important; }
+.light .mobile-nav .mobile-profile-link:hover { background: rgba(86,96,232,.06); }
+.light .mobile-nav .text-slate-200 { color: #11131c !important; }
+.light .mobile-nav .text-slate-500,
+.light .mobile-nav .text-slate-600 { color: #78809b !important; }
+.light .mobile-nav .border-white\/\[\.08\] { border-color: rgba(17,19,28,.08) !important; }
+.light .mobile-logout-btn { color: #e11d48 !important; }
+.light .mobile-logout-btn:hover { background: rgba(225,29,72,.08) !important; color: #be123c !important; }
+
+.light .account-dropdown { background: #fff; border: 1px solid rgba(17,19,28,.08); border-radius: 20px; box-shadow: 0 16px 40px rgba(37,44,157,.14); }
+.light .account-dropdown .text-white,
+.light .account-dropdown .text-slate-200,
+.light .account-dropdown .text-slate-300 { color: #11131c !important; }
+.light .account-dropdown .text-slate-400,
+.light .account-dropdown .text-slate-500 { color: #78809b !important; }
+.light .account-dropdown .border-white\/\[\.08\] { border-color: rgba(17,19,28,.08) !important; }
+.light .account-dropdown button:hover { background: rgba(86,96,232,.06); }
+.light .account-dropdown .text-rose-400 { color: #e11d48 !important; }
+.light .account-dropdown .text-rose-400:hover { background: rgba(225,29,72,.08) !important; color: #be123c !important; }
 .light .login-page { background: #ffffff; }
 .light .login-page .card { border-radius: 32px; }
 .light .login-page .button-primary { background: #fff; color: #11131c; }
