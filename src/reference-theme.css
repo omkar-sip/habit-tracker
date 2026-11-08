@@ -492,8 +492,9 @@ li {
 /* Keep the hero headline in the same clean display family as the streak unit label. */
 .page-wrap .hero-card h3 {
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: -.03em;
+  text-transform: uppercase;
 }
 
 /* Match the dark theme's type scale in light mode. Light mode keeps its own
@@ -681,3 +682,92 @@ html:not(.light) .sidebar-footer {
   background: transparent !important;
   box-shadow: 0 0 0 1px rgba(255,255,255,.2), 0 10px 30px rgba(0,0,0,.2) !important;
 }
+
+/* Keep the sidebar collapse control visible after the navigation grows. */
+.sidebar:not(.sidebar-collapsed) .sidebar-toggle {
+  position: absolute !important;
+  top: 14px !important;
+  right: 12px !important;
+  z-index: 4;
+  width: 38px !important;
+  height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.sidebar:not(.sidebar-collapsed) .sidebar-toggle-label {
+  display: none;
+}
+
+.sidebar:not(.sidebar-collapsed) .sidebar-brand {
+  padding-right: 44px;
+}
+
+/* Bold dashboard card canvases: preserve each card's existing color identity. */
+.light .level-card {
+  background: linear-gradient(140deg, #c084fc 0%, #8b5cf6 46%, #6d28d9 100%) !important;
+  box-shadow: 0 18px 45px -8px rgba(124,58,237,.3) !important;
+  color: #fff !important;
+}
+.light .level-card .level-watermark { color: #f5d0fe !important; opacity: .34 !important; }
+.light .level-card h3,
+.light .level-card .text-white { color: #fff !important; }
+.light .level-card .eyebrow { color: #f3e8ff !important; }
+.light .level-card .text-slate-400 { color: rgba(255,255,255,.78) !important; }
+.light .level-card p { color: rgba(255,255,255,.86) !important; }
+.light .level-card p .text-lime { color: #ecfccb !important; }
+.light .level-card > div > .bg-white\/\[\.08\] { background: rgba(255,255,255,.22) !important; }
+
+.light .unlocks-card {
+  background: linear-gradient(140deg, #fed7aa 0%, #f97316 45%, #c2410c 100%) !important;
+  box-shadow: 0 18px 45px -8px rgba(234,88,12,.28) !important;
+  color: #fff !important;
+}
+.light .unlocks-card .unlocks-watermark { color: #ffedd5 !important; opacity: .32 !important; }
+.light .unlocks-card h3,
+.light .unlocks-card .text-white,
+.light .unlocks-card .text-slate-200 { color: #fff !important; }
+.light .unlocks-card .eyebrow { color: #fff7ed !important; }
+.light .unlocks-card .text-slate-500 { color: rgba(255,255,255,.78) !important; }
+.light .unlocks-card .bg-white\/\[\.03\] { background: rgba(255,255,255,.14) !important; }
+.light .unlocks-card .bg-white\/\[\.03\]:hover { background: rgba(255,255,255,.22) !important; }
+.light .unlocks-card .text-amber-400 { color: #fff7ed !important; }
+.light .unlocks-card .bg-amber-400\/10 { background: rgba(255,255,255,.18) !important; }
+.light .unlocks-card .border-amber-400\/20 { border-color: rgba(255,255,255,.3) !important; }
+
+.light .milestone-card {
+  background: linear-gradient(140deg, #ecfccb 0%, #bef264 46%, #84cc16 100%) !important;
+  box-shadow: 0 18px 45px -8px rgba(101,163,13,.28) !important;
+  color: #14532d !important;
+}
+.light .milestone-card .milestone-watermark { color: #166534 !important; opacity: .16 !important; }
+.light .milestone-card h3,
+.light .milestone-card .text-white { color: #14532d !important; }
+.light .milestone-card .eyebrow { color: #365314 !important; }
+.light .milestone-card p,
+.light .milestone-card .text-slate-400 { color: #365314 !important; }
+.light .milestone-card .bg-white\/\[\.08\] { background: rgba(20,83,45,.16) !important; }
+
+/* Active habit loop: vibrant workspace surface, not nested white cards. */
+.light .loop-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f3f1ff 100%) !important;
+  border: 0 !important;
+  border-radius: 22px !important;
+  box-shadow: 0 20px 45px rgba(67,58,167,.14) !important;
+}
+.light .loop-card .habit-row {
+  border: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 7px 16px rgba(49,55,117,.08), inset 5px 0 0 transparent;
+  transform: none !important;
+}
+.light .loop-card .habit-row:nth-child(1) { background: #e8ffc0 !important; box-shadow: 0 7px 16px rgba(89,139,35,.12), inset 5px 0 0 #9be33d; }
+.light .loop-card .habit-row:nth-child(2) { background: #e8e4ff !important; box-shadow: 0 7px 16px rgba(83,69,182,.12), inset 5px 0 0 #8b78f4; }
+.light .loop-card .habit-row:nth-child(3) { background: #fff2c8 !important; box-shadow: 0 7px 16px rgba(188,123,23,.12), inset 5px 0 0 #f2a840; }
+.light .loop-card .habit-row:nth-child(4) { background: #ffe6f2 !important; box-shadow: 0 7px 16px rgba(185,76,132,.12), inset 5px 0 0 #ec76b1; }
+.light .loop-card .habit-row:hover { transform: translateX(4px) !important; box-shadow: 0 12px 22px rgba(49,55,117,.13), inset 5px 0 0 #5660e8; }
+.light .loop-card .habit-row-done { box-shadow: 0 7px 16px rgba(49,55,117,.08), inset 5px 0 0 #9be33d; }
+.light .loop-card .habit-row p:first-child { color: #202332 !important; font-weight: 800 !important; }
+.light .loop-card .habit-row p:last-child { color: #66708a !important; font-weight: 600; }
+.light .loop-card .habit-row .check-button { border-color: rgba(17,19,28,.15); background: rgba(255,255,255,.46); }
+.light .loop-card .habit-row .check-button-done { border-color: #a6ed3d; background: #a6ed3d; box-shadow: 0 0 16px rgba(166,237,61,.35); }

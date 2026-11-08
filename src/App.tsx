@@ -300,7 +300,7 @@ function DashboardView({ snapshot, onNavigate, onToggle, onOpenCreate }: { snaps
     </section>
 
     <section className="mb-6 grid gap-5 xl:grid-cols-[1.1fr_.9fr] items-stretch">
-      <div className="card p-6 sm:p-7">
+      <div className="card loop-card p-6 sm:p-7">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <p className="eyebrow text-xs font-bold uppercase tracking-widest">Your loop</p>
