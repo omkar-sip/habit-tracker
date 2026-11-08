@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 import { z } from 'zod'
 import { store } from './store'
 
-const app = express()
+const app: express.Express = express()
 const port = Number(process.env.PORT || 3001)
 const jwtSecret = process.env.MANUS_JWT_SECRET || (process.env.NODE_ENV === 'production' ? (() => { throw new Error('MANUS_JWT_SECRET is required in production') })() : 'habitforge-local-development-secret')
 
@@ -104,4 +104,8 @@ if (fs.existsSync(distPath)) {
   })
 }
 
-app.listen(port, '0.0.0.0', () => console.log(`HabitForge API listening on ${port}`))
+export default app
+
+if (!process.env.VERCEL) {
+  app.listen(port, '0.0.0.0', () => console.log(`HabitForge API listening on ${port}`))
+}
