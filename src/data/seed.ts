@@ -3,9 +3,9 @@ import { addDays, dateKey, startOfWeekKey } from '../lib/date'
 
 export const seedUser: User = {
   id: 'demo-alex-morgan',
-  name: 'Alex Morgan',
-  email: 'alex@habitforge.app',
-  initials: 'AM',
+  name: 'Sheetal Ingale',
+  email: 'sheetal@habitforge.app',
+  initials: 'SI',
   timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Los_Angeles',
   plan: 'free',
   xp: 1280,
