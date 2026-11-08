@@ -282,6 +282,56 @@ button { cursor: pointer; }
 .icon-picker { display: inline-flex; height: 34px; width: 34px; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.09); border-radius: 9px; color: #7c8494; background: rgba(255,255,255,.025); transition: all .18s ease; }
 .icon-picker:hover, .icon-picker-active { border-color: rgba(155,125,255,.5); color: #c8bbff; background: rgba(155,125,255,.12); }
 .mobile-nav { box-shadow: 0 18px 70px rgba(0,0,0,.4); }
+
+.challenge-tree-card { min-height: 420px; background: radial-gradient(circle at 50% 46%, rgba(183,243,107,.12), transparent 34%), linear-gradient(145deg, rgba(23,54,30,.98), rgba(15,24,20,.98)); border-color: rgba(183,243,107,.18); }
+.challenge-tree-preview { box-shadow: 0 0 0 1px rgba(183,243,107,.22), 0 24px 80px rgba(35,122,61,.24); }
+.challenge-actions { flex-wrap: wrap; }
+.challenge-actions .button { flex: 0 0 auto; white-space: nowrap; }
+.growth-tree-canvas { position: relative; height: 255px; width: 100%; overflow: hidden; margin: 8px 0 -2px; border-radius: 20px; }
+.growth-tree-canvas canvas { display: block; height: 100%; width: 100%; }
+.challenge-day-badge { display: inline-flex; align-items: baseline; gap: 3px; border-radius: 999px; background: rgba(183,243,107,.12); padding: 7px 11px; color: #b7f36b; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.challenge-day-badge span { color: rgba(183,243,107,.55); font-size: 10px; }
+.challenge-tree { position: relative; display: flex; height: 215px; align-items: center; justify-content: center; overflow: hidden; margin: 18px -20px 0; }
+.challenge-tree-ground { position: absolute; bottom: 20px; height: 28px; width: 66%; border-radius: 50%; background: rgba(183,243,107,.14); filter: blur(10px); }
+.challenge-tree-icon { position: relative; z-index: 1; color: #b7f36b; filter: drop-shadow(0 0 16px rgba(183,243,107,.28)); transition: width .5s ease, height .5s ease, transform .5s ease; }
+.challenge-tree-stage-0 .challenge-tree-icon { width: 52px; height: 52px; color: #9b7dff; transform: translateY(38px); }
+.challenge-tree-stage-1 .challenge-tree-icon { width: 78px; height: 78px; transform: translateY(24px); }
+.challenge-tree-stage-2 .challenge-tree-icon { width: 112px; height: 112px; transform: translateY(8px); }
+.challenge-tree-stage-3 .challenge-tree-icon { width: 148px; height: 148px; transform: translateY(-4px); }
+.challenge-tree-stage-4 .challenge-tree-icon { width: 180px; height: 180px; transform: translateY(-14px); }
+.challenge-tree-spark { position: absolute; height: 5px; width: 5px; border-radius: 999px; background: #b7f36b; box-shadow: 0 0 14px #b7f36b; animation: challenge-spark 2.4s ease-in-out infinite; }
+.challenge-tree-spark-one { top: 30%; left: 34%; }
+.challenge-tree-spark-two { top: 42%; right: 31%; animation-delay: -.9s; }
+@keyframes challenge-spark { 0%, 100% { opacity: .2; transform: translateY(5px) scale(.7); } 50% { opacity: 1; transform: translateY(-8px) scale(1); } }
+.challenge-task { display: flex; width: 100%; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,.07); border-radius: 16px; background: rgba(255,255,255,.025); padding: 12px; color: #fff; text-align: left; transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+.challenge-task:hover { transform: translateX(3px); border-color: rgba(183,243,107,.3); background: rgba(183,243,107,.06); }
+.challenge-task strong, .challenge-task small { display: block; }
+.challenge-task strong { font-size: 13px; font-weight: 800; line-height: 1.25; }
+.challenge-task small { margin-top: 3px; color: #727a8a; font-size: 11px; line-height: 1.35; }
+.challenge-check { display: flex; height: 25px; width: 25px; flex: none; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.14); border-radius: 8px; color: #10150b; }
+.challenge-check-done { border-color: #b7f36b; background: #b7f36b; box-shadow: 0 0 15px rgba(183,243,107,.18); }
+.challenge-day-cell { display: flex; aspect-ratio: 1; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.06); border-radius: 7px; background: rgba(255,255,255,.025); color: #606877; font-size: 10px; font-weight: 700; }
+.challenge-day-cell span { line-height: 1; }
+.challenge-day-partial { background: rgba(155,125,255,.2); color: #c9bdff; }
+.challenge-day-complete { border-color: rgba(183,243,107,.35); background: rgba(183,243,107,.42); color: #10150b; }
+.challenge-day-current { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+.challenge-editor-row { border: 1px solid rgba(255,255,255,.07); border-radius: 14px; background: rgba(255,255,255,.02); padding: 10px; }
+.challenge-editor-row input { width: 100%; border: 0; outline: 0; background: transparent; color: #edf0f6; padding: 3px 0; font-size: 12px; }
+.challenge-editor-row input + input { color: #727a8a; font-size: 11px; }
+.light .challenge-tree-card { background: radial-gradient(circle at 50% 46%, rgba(183,243,107,.22), transparent 34%), linear-gradient(145deg, #214f2c, #12331e); border-color: rgba(31,111,48,.16); }
+.light .challenge-task { border-color: rgba(17,19,28,.08); background: rgba(17,19,28,.025); color: #11131c; }
+.light .challenge-task small { color: #7c8197; }
+.light .challenge-day-cell { border-color: rgba(17,19,28,.08); background: rgba(17,19,28,.025); color: #8a8fa5; }
+.light .challenge-editor-row { border-color: rgba(17,19,28,.08); background: rgba(17,19,28,.025); }
+.light .challenge-editor-row input { color: #11131c; }
+.light .challenge-editor-row input + input { color: #7c8197; }
+@media (max-width: 640px) {
+  .challenge-tree-card { min-height: 380px; }
+  .challenge-tree { height: 180px; }
+  .challenge-actions { align-self: stretch; }
+  .challenge-actions .button { flex: 1 1 calc(50% - 4px); justify-content: center; min-height: 44px; }
+  .challenge-actions .button-primary { flex-basis: 100%; }
+}
 .login-page { position: relative; display: flex; min-height: 100vh; align-items: center; justify-content: center; overflow: hidden; background: #0b0c10; }
 .login-orbit { position: absolute; border: 1px solid rgba(155,125,255,.13); border-radius: 999px; transform: rotate(-20deg); }
 .login-orbit-one { height: 680px; width: 1000px; }

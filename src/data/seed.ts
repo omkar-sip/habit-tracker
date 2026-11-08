@@ -1,4 +1,4 @@
-import type { Habit, User } from '../types'
+import type { Challenge21, Habit, User } from '../types'
 import { addDays, dateKey, startOfWeekKey } from '../lib/date'
 
 export const seedUser: User = {
@@ -36,8 +36,23 @@ export const seedHabits: Habit[] = [
   }
 ]
 
+export const seedChallenge21: Challenge21 = {
+  id: 'challenge-21-demo',
+  title: 'Build your growing season',
+  startedAt: dateKey(today),
+  tasks: [
+    { id: 'challenge-task-move', title: 'Move for 20 minutes', description: 'Give your body a clear signal.', color: '#B7F36B', icon: 'dumbbell', completedDays: [] },
+    { id: 'challenge-task-focus', title: 'One focused block', description: 'Protect time for what matters.', color: '#9B7DFF', icon: 'brain', completedDays: [] },
+    { id: 'challenge-task-reflect', title: 'Write one line', description: 'Notice what is becoming easier.', color: '#FFB86B', icon: 'book', completedDays: [] }
+  ]
+}
+
 // Ensure the current loop is visible in the product demo.
 seedHabits[0].completedDates = [...new Set([...seedHabits[0].completedDates, keyAt(0), keyAt(1), keyAt(2), keyAt(3), keyAt(4), keyAt(5), keyAt(6), keyAt(7)])]
 seedHabits[1].completedDates = [...new Set([...seedHabits[1].completedDates, keyAt(0), keyAt(1), keyAt(2), keyAt(3), keyAt(4)])]
 
-export const createSeedSnapshot = () => ({ user: { ...seedUser }, habits: seedHabits.map((habit) => ({ ...habit, completedDates: [...habit.completedDates] })) })
+export const createSeedSnapshot = () => ({
+  user: { ...seedUser },
+  habits: seedHabits.map((habit) => ({ ...habit, completedDates: [...habit.completedDates] })),
+  challenge21: { ...seedChallenge21, tasks: seedChallenge21.tasks.map((task) => ({ ...task, completedDays: [...task.completedDays] })) }
+})

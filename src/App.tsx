@@ -4,7 +4,7 @@ import {
   Activity, ArrowUpRight, Award, BarChart3, Bell, BookOpen, Brain, CalendarDays, Check, ChevronRight,
   CircleHelp, Clock3, Download, Dumbbell, Flame, Gauge, GitBranch, Globe2, LayoutDashboard,
   LockKeyhole, LogOut, Menu, Moon, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Pencil, Plus, Search, Settings2, ShieldCheck,
-  Sparkles, Sun, Target, Trash2, TrendingUp, Trophy, UserRound, WalletCards, X, Zap
+  Sparkles, Sprout, Sun, Target, Trash2, TreePine, TrendingUp, Trophy, UserRound, WalletCards, X, Zap
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
@@ -12,7 +12,8 @@ import { seedUser, createSeedSnapshot } from './data/seed'
 import { achievements, buildActivity, levelForXp, levelProgress, totalCompletions, xpRangeForLevel, XP_PER_COMPLETION, unlockedAchievementIds } from './lib/gamification'
 import { addDays, currentPeriodKeys, dateKey, formatLongDate, formatShortDate, getHabitStreak, getLastNDays, isCompletedThisPeriod, startOfWeekKey, weekPeriodKey } from './lib/date'
 import { downloadHabitCsv } from './lib/export'
-import type { AppSnapshot, Habit, HabitDraft, Plan } from './types'
+import type { AppSnapshot, Challenge21, Habit, HabitDraft, Plan } from './types'
+import GrowthTree from './components/GrowthTree'
 import './styles.css'
 import './reference-theme.css'
 
@@ -51,12 +52,23 @@ const loadSnapshot = (): AppSnapshot => {
   if (typeof window === 'undefined') return { ...createSeedSnapshot(), achievements, unlockedAchievementIds: [], activity: [] }
   try {
     const raw = window.localStorage.getItem('habitforge.snapshot')
-    if (raw) return JSON.parse(raw) as AppSnapshot
+    if (raw) {
+      const parsed = JSON.parse(raw) as AppSnapshot
+      const seeded = createSeedSnapshot()
+      return { ...parsed, challenge21: parsed.challenge21 ?? seeded.challenge21 }
+    }
   } catch {
     // Seed state is the safe fallback for a corrupted local preview.
   }
   const base = createSeedSnapshot()
   return { ...base, achievements, unlockedAchievementIds: unlockedAchievementIds(base.user, base.habits), activity: buildActivity(base.habits) }
+}
+
+const challengeDayNumber = (challenge: Challenge21, today: string) => Math.max(1, Math.min(21, Math.floor((Date.parse(`${today}T12:00:00`) - Date.parse(`${challenge.startedAt}T12:00:00`)) / 86400000) + 1))
+
+const challengeProgress = (challenge: Challenge21) => {
+  const completed = challenge.tasks.reduce((sum, task) => sum + task.completedDays.length, 0)
+  return Math.round((completed / Math.max(1, challenge.tasks.length * 21)) * 100)
 }
 
 const iconFor = (name: string) => iconMap[name] ?? Target
@@ -96,6 +108,7 @@ function Sidebar({ activePath, onNavigate, onLogout, user, collapsed, onToggle }
   const primary = [
     { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
     { path: '/habits', label: 'My habits', icon: Target },
+    { path: '/21-days', label: '21-day growth', icon: TreePine },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 }
   ]
   const secondary = [
@@ -445,6 +458,60 @@ function HabitsView({ snapshot, onToggle, onOpenCreate, onEdit, onDelete }: { sn
   )
 }
 
+function ChallengeView({ snapshot, onSave, onToggle, onRestart }: { snapshot: AppSnapshot; onSave: (challenge: Challenge21) => void; onToggle: (taskId: string, day: string) => void; onRestart: () => void }) {
+  const challenge = snapshot.challenge21!
+  const today = dateKey(new Date(), snapshot.user.timezone)
+  const currentDay = challengeDayNumber(challenge, today)
+  const progress = challengeProgress(challenge)
+  const dayKeys = Array.from({ length: 21 }, (_, index) => dateKey(addDays(challenge.startedAt, index), snapshot.user.timezone))
+  const todayDone = challenge.tasks.filter((task) => task.completedDays.includes(today)).length
+  const [editing, setEditing] = useState(false)
+  const [previewFull, setPreviewFull] = useState(false)
+  const [draft, setDraft] = useState<Challenge21>(challenge)
+
+  useEffect(() => setDraft(challenge), [challenge])
+
+  const addTask = () => setDraft((value) => ({ ...value, tasks: [...value.tasks, { id: `challenge-task-${Date.now()}`, title: 'New daily task', description: 'Make it specific and easy to return to.', color: colorOptions[value.tasks.length % colorOptions.length], icon: 'target', completedDays: [] }] }))
+  const updateTask = (id: string, key: 'title' | 'description', value: string) => setDraft((current) => ({ ...current, tasks: current.tasks.map((task) => task.id === id ? { ...task, [key]: value } : task) }))
+  const removeTask = (id: string) => setDraft((current) => ({ ...current, tasks: current.tasks.filter((task) => task.id !== id) }))
+  const treeStage = progress >= 82 ? 4 : progress >= 58 ? 3 : progress >= 30 ? 2 : progress > 0 ? 1 : 0
+  const displayedProgress = previewFull ? 100 : progress
+  const displayedTreeStage = previewFull ? 4 : treeStage
+  const treeLabels = ['A seed waiting for your first check-in.', 'The first roots are taking hold.', 'A young tree is finding its shape.', 'Your consistency is becoming visible.', 'A full canopy — you kept showing up.']
+
+  return <div className="page-wrap">
+    <section className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+      <div>
+        <p className="eyebrow text-lime">21-day growth module</p>
+        <h2 className="page-title">Grow what you repeat.</h2>
+        <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-500">Choose a few daily tasks, lock in for 21 days, and watch a living progress tree respond to your consistency.</p>
+      </div>
+      <div className="challenge-actions flex gap-2 self-start md:self-auto">
+        <button onClick={() => setPreviewFull((value) => !value)} className="button button-ghost"><TreePine size={14} />{previewFull ? 'Show current tree' : 'Preview full tree'}</button>
+        <button onClick={() => setEditing((value) => !value)} className="button button-ghost">{editing ? 'Close editor' : 'Edit plan'} <Pencil size={14} /></button>
+        <button onClick={onRestart} className="button button-primary"><Sprout size={15} /> Start over</button>
+      </div>
+    </section>
+
+    <section className="mb-5 grid gap-5 xl:grid-cols-[.9fr_1.1fr]">
+      <div className={`card challenge-tree-card overflow-hidden p-6 sm:p-8 ${previewFull ? 'challenge-tree-preview' : ''}`}>
+        <div className="relative z-10 flex items-start justify-between gap-4"><div><p className="eyebrow text-lime">Your living proof</p><h3 className="mt-1 text-2xl font-bold text-white">{challenge.title}</h3></div><span className="challenge-day-badge">Day {currentDay}<span>/21</span></span></div>
+        <GrowthTree progress={displayedProgress} stage={displayedTreeStage} />
+        <div className="relative z-10 mt-2"><div className="mb-2 flex items-center justify-between text-xs font-semibold"><span className="text-slate-400">{previewFull ? 'Full canopy preview — keep showing up to grow it for real.' : treeLabels[treeStage]}</span><span className="font-mono text-lime">{previewFull ? '100% preview' : `${progress}% grown`}</span></div><div className="h-2 overflow-hidden rounded-full bg-white/[.08]"><div className="h-full rounded-full bg-lime transition-all duration-500" style={{ width: `${displayedProgress}%` }} /></div><p className="mt-3 text-xs leading-relaxed text-slate-500">{todayDone} of {challenge.tasks.length} tasks checked today. Every completed day adds another ring to the tree.</p></div>
+      </div>
+
+      <div className="card p-6 sm:p-8">
+        <div className="mb-5 flex items-center justify-between"><div><p className="eyebrow">Today’s roots</p><h3 className="mt-1 text-xl font-bold text-white">Keep the promise small.</h3></div><span className="text-xs font-semibold text-slate-500">{todayDone}/{challenge.tasks.length} complete</span></div>
+        <div className="space-y-3">{challenge.tasks.map((task) => { const checked = task.completedDays.includes(today); return <button key={task.id} onClick={() => onToggle(task.id, today)} className={`challenge-task ${checked ? 'challenge-task-done' : ''}`}><IconBubble name={task.icon} color={task.color} size="sm" /><span className="min-w-0 flex-1 text-left"><strong>{task.title}</strong><small>{task.description}</small></span><span className={`challenge-check ${checked ? 'challenge-check-done' : ''}`}>{checked ? <Check size={15} strokeWidth={3} /> : null}</span></button> })}</div>
+        <div className="mt-6 grid grid-cols-7 gap-1.5">{dayKeys.map((day, index) => { const count = challenge.tasks.filter((task) => task.completedDays.includes(day)).length; const complete = count === challenge.tasks.length && challenge.tasks.length > 0; return <div key={day} title={`Day ${index + 1}: ${count}/${challenge.tasks.length}`} className={`challenge-day-cell ${complete ? 'challenge-day-complete' : count ? 'challenge-day-partial' : ''} ${index + 1 === currentDay ? 'challenge-day-current' : ''}`}><span>{index + 1}</span></div> })}</div>
+        <p className="mt-3 text-[10px] uppercase tracking-[.14em] text-slate-600">Your 21-day map · finish by {formatShortDate(dayKeys[20])}</p>
+      </div>
+    </section>
+
+    {editing && <section className="card mb-5 p-6 sm:p-8"><div className="mb-5 flex items-center justify-between"><div><p className="eyebrow text-violet">Plan builder</p><h3 className="mt-1 text-xl font-bold text-white">Set the tasks you want to grow.</h3></div><button onClick={addTask} className="button button-ghost"><Plus size={14} /> Add task</button></div><label className="field mb-5"><span>Challenge name</span><input value={draft.title} onChange={(event) => setDraft((value) => ({ ...value, title: event.target.value }))} /></label><div className="grid gap-3 md:grid-cols-2">{draft.tasks.map((task) => <div key={task.id} className="challenge-editor-row"><div className="flex items-center gap-3"><IconBubble name={task.icon} color={task.color} size="sm" /><div className="min-w-0 flex-1"><input value={task.title} onChange={(event) => updateTask(task.id, 'title', event.target.value)} aria-label="Task name" /><input value={task.description} onChange={(event) => updateTask(task.id, 'description', event.target.value)} aria-label="Task description" /></div><button onClick={() => removeTask(task.id)} aria-label={`Remove ${task.title}`} className="icon-button"><Trash2 size={14} /></button></div></div>)}</div><div className="mt-6 flex justify-end"><button onClick={() => { onSave({ ...draft, title: draft.title.trim() || 'My 21-day growth plan', tasks: draft.tasks.filter((task) => task.title.trim()) }); setEditing(false) }} className="button button-primary"><Check size={14} /> Save plan</button></div></section>}
+  </div>
+}
+
 function Heatmap({ habits, locked, onUpgrade }: { habits: Habit[]; locked: boolean; onUpgrade: () => void }) {
   const days = getLastNDays(91)
   const values = days.map((day) => ({ day, count: habits.filter((habit) => habit.completedDates.includes(day)).length }))
@@ -578,11 +645,18 @@ export default function App() {
   }
 
   const deleteHabit = (id: string) => { void apiRequest(`/api/habits/${id}`, { method: 'DELETE' }).catch(() => undefined); setSnapshot((current) => { const habits = current.habits.filter((habit) => habit.id !== id); return { ...current, habits, activity: buildActivity(habits, new Date(), 12, current.user.timezone) } }); setToast('Habit removed from your loop') }
+  const saveChallenge = (challenge: Challenge21) => { setSnapshot((current) => ({ ...current, challenge21: challenge })); setToast('21-day plan saved') }
+  const toggleChallengeTask = (taskId: string, day: string) => setSnapshot((current) => {
+    if (!current.challenge21) return current
+    const challenge21 = { ...current.challenge21, tasks: current.challenge21.tasks.map((task) => task.id === taskId ? { ...task, completedDays: task.completedDays.includes(day) ? task.completedDays.filter((value) => value !== day) : [...task.completedDays, day] } : task) }
+    return { ...current, challenge21 }
+  })
+  const restartChallenge = () => setSnapshot((current) => current.challenge21 ? { ...current, challenge21: { ...current.challenge21, startedAt: dateKey(new Date(), current.user.timezone), tasks: current.challenge21.tasks.map((task) => ({ ...task, completedDays: [] })) } } : current)
   const openCreate = () => { setEditing(null); setModalOpen(true) }
   const openEdit = (habit: Habit) => { setEditing(habit); setModalOpen(true) }
-  const currentTitle = activePath === '/habits' ? 'My habits' : activePath === '/analytics' ? 'Analytics' : activePath === '/profile' ? 'Profile' : activePath === '/upgrade' ? 'Upgrade' : 'Overview'
+  const currentTitle = activePath === '/habits' ? 'My habits' : activePath === '/21-days' ? '21-day growth' : activePath === '/analytics' ? 'Analytics' : activePath === '/profile' ? 'Profile' : activePath === '/upgrade' ? 'Upgrade' : 'Overview'
 
   if (!session || activePath === '/login') return <><LoginView onLogin={login} /><AnimatePresence>{toast && <Toast message={toast} onClose={() => setToast('')} />}</AnimatePresence></>
 
-  return <div className="min-h-screen"><AmbientSpotlight /><Sidebar activePath={activePath} onNavigate={navigate} onLogout={logout} user={snapshot.user} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><Topbar title={currentTitle} onTheme={() => setDark((value) => !value)} dark={dark} onMenu={() => setMobileNav((value) => !value)} onNavigate={navigate} user={snapshot.user} collapsed={sidebarCollapsed} />{mobileNav && <div className="mobile-nav fixed inset-x-4 top-[82px] z-30 rounded-2xl border border-white/[.1] bg-[#12141b]/95 p-3 shadow-2xl backdrop-blur-xl lg:hidden"><NavItem item={{ path: '/dashboard', label: 'Overview', icon: LayoutDashboard }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/habits', label: 'My habits', icon: Target }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/analytics', label: 'Analytics', icon: BarChart3 }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/profile', label: 'Profile', icon: UserRound }} activePath={activePath} onNavigate={navigate} /></div>}<main className={sidebarCollapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}>{activePath === '/habits' && <HabitsView snapshot={snapshot} onToggle={toggleHabit} onOpenCreate={openCreate} onEdit={openEdit} onDelete={deleteHabit} />}{activePath === '/analytics' && <AnalyticsView snapshot={snapshot} onNavigate={navigate} onExport={() => snapshot.user.plan === 'premium' ? downloadHabitCsv(snapshot.habits) : (setToast('CSV export is a Premium feature'), navigate('/upgrade'))} />}{activePath === '/profile' && <ProfileView snapshot={snapshot} onNavigate={navigate} onLogout={logout} />}{activePath === '/upgrade' && <UpgradeView onBack={() => navigate('/dashboard')} onToast={setToast} />}{(activePath === '/dashboard' || activePath === '/') && <DashboardView snapshot={snapshot} onNavigate={navigate} onToggle={toggleHabit} onOpenCreate={openCreate} />}</main><AnimatePresence>{modalOpen && <HabitModal editing={editing} onClose={() => { setModalOpen(false); setEditing(null) }} onSave={saveHabit} />}{toast && <Toast message={toast} onClose={() => setToast('')} />}</AnimatePresence></div>
+  return <div className="min-h-screen"><AmbientSpotlight /><Sidebar activePath={activePath} onNavigate={navigate} onLogout={logout} user={snapshot.user} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><Topbar title={currentTitle} onTheme={() => setDark((value) => !value)} dark={dark} onMenu={() => setMobileNav((value) => !value)} onNavigate={navigate} user={snapshot.user} collapsed={sidebarCollapsed} />{mobileNav && <div className="mobile-nav fixed inset-x-4 top-[82px] z-30 rounded-2xl border border-white/[.1] bg-[#12141b]/95 p-3 shadow-2xl backdrop-blur-xl lg:hidden"><NavItem item={{ path: '/dashboard', label: 'Overview', icon: LayoutDashboard }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/habits', label: 'My habits', icon: Target }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/21-days', label: '21-day growth', icon: TreePine }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/analytics', label: 'Analytics', icon: BarChart3 }} activePath={activePath} onNavigate={navigate} /><NavItem item={{ path: '/profile', label: 'Profile', icon: UserRound }} activePath={activePath} onNavigate={navigate} /></div>}<main className={sidebarCollapsed ? 'lg:ml-[82px]' : 'lg:ml-[236px]'}>{activePath === '/habits' && <HabitsView snapshot={snapshot} onToggle={toggleHabit} onOpenCreate={openCreate} onEdit={openEdit} onDelete={deleteHabit} />}{activePath === '/21-days' && <ChallengeView snapshot={snapshot} onSave={saveChallenge} onToggle={toggleChallengeTask} onRestart={restartChallenge} />}{activePath === '/analytics' && <AnalyticsView snapshot={snapshot} onNavigate={navigate} onExport={() => snapshot.user.plan === 'premium' ? downloadHabitCsv(snapshot.habits) : (setToast('CSV export is a Premium feature'), navigate('/upgrade'))} />}{activePath === '/profile' && <ProfileView snapshot={snapshot} onNavigate={navigate} onLogout={logout} />}{activePath === '/upgrade' && <UpgradeView onBack={() => navigate('/dashboard')} onToast={setToast} />}{(activePath === '/dashboard' || activePath === '/') && <DashboardView snapshot={snapshot} onNavigate={navigate} onToggle={toggleHabit} onOpenCreate={openCreate} />}</main><AnimatePresence>{modalOpen && <HabitModal editing={editing} onClose={() => { setModalOpen(false); setEditing(null) }} onSave={saveHabit} />}{toast && <Toast message={toast} onClose={() => setToast('')} />}</AnimatePresence></div>
 }

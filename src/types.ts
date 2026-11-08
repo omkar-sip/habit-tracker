@@ -43,6 +43,22 @@ export interface ActivityPoint {
   xp: number
 }
 
+export interface ChallengeTask {
+  id: string
+  title: string
+  description: string
+  color: string
+  icon: string
+  completedDays: string[]
+}
+
+export interface Challenge21 {
+  id: string
+  title: string
+  startedAt: string
+  tasks: ChallengeTask[]
+}
+
 export interface HabitStats {
   habitId: string
   completions: number
@@ -56,6 +72,7 @@ export interface AppSnapshot {
   achievements: Achievement[]
   unlockedAchievementIds: string[]
   activity: ActivityPoint[]
+  challenge21?: Challenge21
   lastCheckIn?: string
 }
 

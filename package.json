@@ -14,6 +14,7 @@
     "seed": "tsx server/seed.ts"
   },
   "dependencies": {
+    "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
@@ -27,8 +28,9 @@
     "react-dom": "latest",
     "recharts": "latest",
     "tailwind-merge": "latest",
-    "zod": "latest",
-    "tsx": "latest"
+    "three": "^0.187.0",
+    "tsx": "latest",
+    "zod": "latest"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
