@@ -1,0 +1,46 @@
+{
+  "name": "habitforge",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 0.0.0.0\" \"tsx server/index.ts\"",
+    "dev:client": "vite --host 0.0.0.0",
+    "dev:server": "tsx server/index.ts",
+    "build": "tsc -b && vite build",
+    "start": "tsx server/index.ts",
+    "check": "tsc --noEmit",
+    "seed": "tsx server/seed.ts"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "concurrently": "latest",
+    "cors": "^2.8.6",
+    "express": "latest",
+    "framer-motion": "latest",
+    "jsonwebtoken": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "latest",
+    "tailwind-merge": "latest",
+    "zod": "latest",
+    "tsx": "latest"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "latest",
+    "@types/jsonwebtoken": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "postcss": "latest",
+    "tailwindcss": "3.4.17",
+    "typescript": "latest",
+    "vite": "latest"
+  }
+}

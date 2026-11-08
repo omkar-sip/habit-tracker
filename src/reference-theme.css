@@ -1,0 +1,609 @@
+/* Reference skin: bright, rounded, habit-app energy inspired by the supplied image. */
+.light body,
+.light { background: #ffffff; }
+.light .aurora-one { background: #cdd2ff; opacity: .18; filter: blur(110px); }
+.light .aurora-two { background: #dfff9a; opacity: .16; }
+.light .grain { opacity: .025; }
+.light .topbar { background: rgba(255,255,255,.92); border-color: rgba(17,19,28,.08); box-shadow: 0 1px 0 rgba(17,19,28,.04); }
+.light .sidebar { background: rgba(255,255,255,.96); border-color: rgba(17,19,28,.08); box-shadow: none; }
+.light .sidebar .text-white,
+.light .sidebar .text-slate-200,
+.light .sidebar .text-slate-300,
+.light .topbar .text-white { color: #11131c !important; }
+.light .sidebar .text-slate-500,
+.light .sidebar .text-slate-600,
+.light .topbar .text-slate-500,
+.light .topbar .text-slate-600 { color: #7c8197 !important; }
+.light .sidebar .text-white,
+.light .sidebar .text-slate-200,
+.light .sidebar .text-slate-300 { color: #202332 !important; }
+.light .sidebar .text-slate-500,
+.light .sidebar .text-slate-600 { color: #8a8fa5 !important; }
+.light .brand-mark { background: #11131c; color: #fff; box-shadow: none; }
+.light .nav-item-active { background: #f0f1ff; color: #3943d2 !important; box-shadow: inset 0 0 0 1px #d9dcff; }
+.light .nav-item-active::before { background: #b7f36b; box-shadow: 0 0 16px rgba(183,243,107,.85); }
+.light .page-wrap { padding-top: 54px; }
+.light .card,
+.light .hero-card { background: #fff; border: 0; border-radius: 28px; box-shadow: 0 22px 50px rgba(37, 44, 157, .16); }
+.light .card { transition: transform .24s cubic-bezier(.2,.8,.2,1), box-shadow .24s ease; }
+.light .card:hover { transform: translateY(-2px); box-shadow: 0 28px 58px rgba(37, 44, 157, .2); }
+.light .hero-card { background: #fff; }
+.light .habit-card:nth-child(4n + 1) { background: #dfff9a; }
+.light .habit-card:nth-child(4n + 2) { background: #d7d5ff; }
+.light .habit-card:nth-child(4n + 3) { background: #ffd866; }
+.light .habit-card:nth-child(4n + 4) { background: #ffa8d0; }
+.light .habit-card .mini-stat { background: rgba(255,255,255,.48); border-color: rgba(17,19,28,.08); }
+.light .upgrade-card { border: 0; border-radius: 28px; background: #b7f36b; box-shadow: 0 22px 50px rgba(37, 44, 157, .16); }
+
+/* ── Thematic Card Designs (Artistic, Borderless & Natural Depth) ── */
+
+/* 1. STREAK CARD: Rich Red Canvas with Glowing Orange Fire Transparent Icon */
+.light .streak-card {
+  background: linear-gradient(140deg, #f43f5e 0%, #e11d48 45%, #be123c 100%) !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 18px 45px -8px rgba(225, 29, 72, 0.35) !important;
+  color: #ffffff !important;
+}
+.light .streak-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 55px -6px rgba(225, 29, 72, 0.45) !important;
+}
+.light .streak-card .streak-watermark {
+  color: #ff8a00 !important;
+  opacity: 0.32 !important;
+}
+.light .streak-card .streak-badge {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  font-weight: 800 !important;
+}
+.light .streak-card .streak-icon-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #ffedd5 !important;
+  border: 0 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+}
+.light .streak-card .streak-number {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+.light .streak-card .streak-unit {
+  color: #fed7aa !important;
+  font-weight: 900 !important;
+}
+.light .streak-card .streak-subtitle {
+  color: #ffedd5 !important;
+  font-weight: 800 !important;
+}
+.light .streak-card .streak-quote {
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-weight: 600 !important;
+}
+.light .streak-card .streak-footer {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+.light .streak-card .streak-footer-label {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 700 !important;
+}
+.light .streak-card .streak-best-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  font-weight: 800 !important;
+}
+
+/* 2. HERO CARD: Rich Bold Green Canvas with Glowing Lime Target Transparent Icon */
+.light .hero-card {
+  background: linear-gradient(140deg, #16a34a 0%, #15803d 45%, #14532d 100%) !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 18px 45px -8px rgba(22, 163, 74, 0.35) !important;
+  color: #ffffff !important;
+}
+.light .hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 55px -6px rgba(22, 163, 74, 0.45) !important;
+}
+.light .hero-card .hero-watermark {
+  color: #a3e635 !important;
+  opacity: 0.28 !important;
+}
+.light .hero-card h3 {
+  color: #ffffff !important;
+}
+.light .hero-card p {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+.light .hero-card .eyebrow {
+  color: #d9f99d !important;
+}
+.light .hero-card .hero-badge {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  font-weight: 800 !important;
+}
+.light .hero-card .progress-ring-track {
+  stroke: rgba(255, 255, 255, 0.22) !important;
+}
+.light .hero-card .progress-ring-value {
+  stroke: #d9f99d !important;
+  filter: drop-shadow(0 0 6px rgba(217, 249, 157, 0.5));
+}
+.light .hero-card .stat-value {
+  color: #ffffff !important;
+}
+.light .hero-card .progress-ring-text {
+  color: #ffffff !important;
+}
+.light .hero-card .progress-ring-sub {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* 3. MOMENTUM CARD: Sleek Canvas with Electric Indigo/Cyan Watermark */
+.light .momentum-card {
+  background: #ffffff !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 16px 40px rgba(37, 44, 157, 0.08) !important;
+}
+.light .momentum-card .momentum-watermark {
+  color: #4f46e5 !important;
+  opacity: 0.14 !important;
+}
+.light .momentum-card h3 {
+  color: #1e1b4b !important;
+}
+.light .momentum-card .eyebrow {
+  color: #3730a3 !important;
+}
+.light .momentum-card .text-slate-500 {
+  color: #4338ca !important;
+}
+
+/* 4. LEVEL CARD: Sleek Canvas with Violet Watermark */
+.light .level-card {
+  background: #ffffff !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 16px 40px rgba(37, 44, 157, 0.08) !important;
+}
+.light .level-card .level-watermark {
+  color: #9333ea !important;
+  opacity: 0.14 !important;
+}
+.light .level-card h3 {
+  color: #3b0764 !important;
+}
+.light .level-card .eyebrow {
+  color: #6b21a8 !important;
+}
+.light .level-card p {
+  color: #581c87 !important;
+}
+
+/* 5. UNLOCKS CARD: Sleek Canvas with Golden Amber Watermark */
+.light .unlocks-card {
+  background: #ffffff !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 16px 40px rgba(37, 44, 157, 0.08) !important;
+}
+.light .unlocks-card .unlocks-watermark {
+  color: #d97706 !important;
+  opacity: 0.14 !important;
+}
+.light .unlocks-card h3 {
+  color: #451a03 !important;
+}
+.light .unlocks-card .eyebrow {
+  color: #92400e !important;
+}
+
+/* 6. MILESTONE CARD: Sleek Canvas with Emerald Watermark */
+.light .milestone-card {
+  background: #ffffff !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 16px 40px rgba(37, 44, 157, 0.08) !important;
+}
+.light .milestone-card .milestone-watermark {
+  color: #16a34a !important;
+  opacity: 0.14 !important;
+}
+.light .milestone-card h3 {
+  color: #064e3b !important;
+}
+.light .milestone-card .eyebrow {
+  color: #15803d !important;
+}
+.light .milestone-card p {
+  color: #14532d !important;
+}
+.light .text-white,
+.light h1,
+.light h2,
+.light h3,
+.light .stat-value,
+.light .display-title,
+.light .page-title { color: #11131c !important; }
+.light .display-title,
+.light .page-title,
+.light h1,
+.light h2,
+.light h3 { font-family: 'Nunito', 'Inter', sans-serif; font-weight: 900; letter-spacing: -.045em; }
+.light .display-title { font-size: clamp(3.6rem, 8vw, 7rem); line-height: .88; }
+.light .page-title { font-size: clamp(3rem, 6vw, 5.4rem); line-height: .95; letter-spacing: -.04em; }
+.light .page-wrap > section .text-slate-500 { color: rgba(255,255,255,.84) !important; }
+.light .page-wrap > section .eyebrow { color: rgba(255,255,255,.82); }
+.light .page-wrap .text-gradient { background: none; color: #11131c !important; -webkit-text-fill-color: #11131c; }
+.light .eyebrow { color: #7b80a1; font-weight: 800; }
+.light .card .text-slate-500,
+.light .card .text-slate-600,
+.light .card .text-slate-700 { color: #7c8197 !important; }
+.light .card .text-slate-200,
+.light .card .text-slate-300 { color: #202332 !important; }
+.light .hero-card .text-slate-500 { color: #7c8197 !important; }
+.light .card .text-lime { color: #5da743 !important; }
+.light .stat-card .eyebrow { color: #7b80a1 !important; }
+.light .stat-card .text-slate-500,
+.light .stat-card .text-slate-600 { color: #7c8197 !important; }
+.light .stat-card .text-orange { color: #d97718 !important; }
+.light .heatmap-lock { background: #151720 !important; }
+.light .heatmap-lock .text-white { color: #fff !important; }
+.light .heatmap-lock .text-slate-500 { color: #c8cedb !important; }
+.light .button-primary { background: #11131c; color: #fff; border-radius: 14px; padding: 11px 22px; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); white-space: nowrap; }
+.light .button-primary:hover { background: #202436; box-shadow: 0 6px 20px rgba(0,0,0,0.18); transform: translateY(-1px); }
+.light .button-ghost { border-color: rgba(17,19,28,.12); background: #f4f5fb; color: #24283a; border-radius: 999px; }
+.light .button-ghost:hover { border-color: rgba(17,19,28,.22); background: #eceef8; color: #11131c; }
+.light .button-success { border-color: rgba(43,157,73,.18); background: #e7f8c8; color: #267238; border-radius: 999px; }
+.light .habit-row { border-color: rgba(17,19,28,.08) !important; background: #fff !important; border-radius: 20px; }
+.light .habit-row-done { box-shadow: inset 4px 0 0 #b7f36b; background: #f8fff0 !important; }
+.light .habit-row:nth-child(1) { background: #efffcf !important; }
+.light .habit-row:nth-child(2) { background: #f0efff !important; }
+.light .habit-row:nth-child(3) { background: #fff8df !important; }
+.light .habit-row:nth-child(4) { background: #fff0f7 !important; }
+.light .habit-row { transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease; }
+.light .habit-row:hover { transform: translateX(4px); box-shadow: 0 10px 24px rgba(37,44,157,.1); }
+.light .habit-card:hover { transform: translateY(-4px) rotate(-.15deg); }
+.light .mini-stat { border-color: rgba(17,19,28,.08); background: #f7f8fc; border-radius: 14px; }
+.light .mini-stat span { color: #8a8fa5; }
+.light .mini-stat strong { color: #11131c; }
+.light .filter-pill { border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.12); color: rgba(255,255,255,.78); border-radius: 999px; }
+.light .filter-pill-active { background: #fff; color: #3c44d9; border-color: #fff; }
+.light .bar { background: linear-gradient(180deg, #5d67e8, #aeb6ff); }
+.light .bar:hover, .light .bar-active { background: linear-gradient(180deg, #11131c, #5964ed); }
+.light .heat-cell { border-radius: 4px; }
+.light .toast { border-color: rgba(17,19,28,.1); background: rgba(255,255,255,.96); color: #11131c; }
+.light .modal-backdrop { background: rgba(43, 48, 170, .48); }
+.light .modal { background: #fff; }
+.light .field input,
+.light .field textarea,
+.light .field select { border-color: rgba(17,19,28,.1); background: #f7f8fc; color: #11131c; border-radius: 14px; }
+.light .field select option { background: #fff; color: #11131c; }
+.light .segmented { border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.12); }
+.light .segmented button { color: rgba(255,255,255,.78); }
+.light .segmented .active { background: #fff; color: #3c44d9; }
+.light .mobile-nav { background: #fff; border: 0; border-radius: 22px; box-shadow: 0 12px 30px rgba(37,44,157,.12); }
+.light .mobile-nav .nav-item-active { background: rgba(86,96,232,.12); color: #3943d2 !important; }
+.light .mobile-nav .nav-item-active::before { background: #5660e8; }
+.light .login-page { background: #ffffff; }
+.light .login-page .card { border-radius: 32px; }
+.light .login-page .button-primary { background: #fff; color: #11131c; }
+.light .login-page .button-ghost { background: #f4f5fb; border-color: rgba(17,19,28,.12); color: #202332; }
+.light .login-page .text-white,
+.light .login-page h1 { color: #11131c !important; }
+.light .login-page .card h1,
+.light .login-page .card .text-white { color: #11131c !important; }
+.light .login-page .card .text-slate-500,
+.light .login-page .card .text-slate-600 { color: #7c8197 !important; }
+.light .login-page .card .eyebrow { color: #6670dc; }
+.light .login-page .brand-mark { background: #11131c; color: #fff; }
+.light .login-orbit { border-color: rgba(255,255,255,.16); }
+
+/* Professional navigation and motion pass. */
+.sidebar {
+  top: 12px;
+  bottom: 12px;
+  height: auto;
+  border-radius: 0 28px 28px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.22) transparent;
+}
+.sidebar-nav-item { justify-content: flex-start; }
+.sidebar-footer { border-top: 1px solid rgba(255,255,255,.1); padding-top: 16px; margin-top: auto; }
+.sidebar-collapsed .sidebar-footer { margin-top: auto; }
+.light .sidebar {
+  background: linear-gradient(180deg, #4b56df 0%, #3c47c9 100%);
+  border-right: 0;
+  color: #fff;
+  top: 14px;
+  bottom: 14px;
+  height: auto;
+  border-radius: 0 30px 30px 0;
+  overflow: hidden;
+  box-shadow: 12px 16px 40px rgba(45, 55, 180, .2);
+}
+.light .sidebar .text-white,
+.light .sidebar .text-slate-200,
+.light .sidebar .text-slate-300,
+.light .sidebar .text-slate-500,
+.light .sidebar .text-slate-600 { color: rgba(255,255,255,.9) !important; }
+.light .sidebar .eyebrow { color: rgba(255,255,255,.68); }
+.light .sidebar .nav-item {
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.78) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 8px 20px rgba(31,39,155,.08);
+  backdrop-filter: blur(14px);
+}
+.light .sidebar .nav-item:hover { background: rgba(255,255,255,.18); color: #fff !important; border-color: rgba(255,255,255,.3); }
+.light .sidebar .nav-item-active {
+  background: rgba(255,255,255,.28) !important;
+  border-color: rgba(255,255,255,.42);
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 10px 24px rgba(31,39,155,.16);
+}
+.light .sidebar .nav-item-active::before { background: #dfff9a; box-shadow: 0 0 16px rgba(223,255,154,.9); }
+.light .sidebar > div:nth-of-type(3) { border-color: rgba(255,255,255,.2); background: rgba(255,255,255,.1); backdrop-filter: blur(14px); }
+.light .sidebar .button,
+.light .sidebar button { color: rgba(255,255,255,.82); }
+.light .sidebar .button:hover,
+.light .sidebar button:hover { color: #fff; }
+.light .sidebar .brand-mark { background: #11131c; color: #fff; }
+.sidebar,
+.topbar,
+main { transition: width .28s cubic-bezier(.2,.8,.2,1), margin-left .28s cubic-bezier(.2,.8,.2,1); }
+.sidebar-brand { min-height: 32px; }
+.sidebar-collapsed .sidebar-brand { justify-content: center; padding-inline: 0; }
+.sidebar-collapsed .sidebar-brand { margin-bottom: 24px; }
+.sidebar-collapsed .brand-copy,
+.sidebar-collapsed .nav-label,
+.sidebar-collapsed .nav-pro,
+.sidebar-collapsed .sidebar-section-label,
+.sidebar-collapsed .level-panel,
+.sidebar-collapsed .profile-copy,
+.sidebar-collapsed .sidebar-toggle-label,
+.sidebar-collapsed .profile-arrow,
+.sidebar-collapsed .logout-label { display: none; }
+.sidebar-collapsed .nav-item { justify-content: center; padding-inline: 0; }
+.sidebar-collapsed .profile-link,
+.sidebar-collapsed .logout-link { justify-content: center; padding-inline: 0; }
+.sidebar-collapsed .sidebar-toggle {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  margin: 10px auto 0 auto !important;
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 12px !important;
+  flex-shrink: 0 !important;
+  z-index: 1;
+}
+.sidebar-collapsed .sidebar-brand .brand-mark { margin-inline: auto; }
+.light .progress-ring-track { stroke: #e2e7f0; }
+.light .progress-ring-value { stroke: #8bd83f; }
+.light .hero-card h3 { font-size: 1.35rem; letter-spacing: -.02em; }
+.light .page-wrap { padding-top: 28px; padding-bottom: 64px; }
+.light .page-wrap > section:first-child { margin-bottom: 24px !important; }
+.light .display-title { white-space: nowrap; }
+.light .display-title { font-size: clamp(2.9rem, 5.2vw, 5.7rem); line-height: .94; letter-spacing: -.035em; }
+.light .page-title { font-size: clamp(2.65rem, 4.8vw, 4.7rem); line-height: .98; letter-spacing: -.03em; }
+
+/* Align cards evenly on each row */
+.page-wrap > section.grid { align-items: stretch; }
+.card { height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+.light .page-wrap { max-width: 1440px; margin-inline: auto; }
+
+@keyframes forge-title-in {
+  0% { opacity: 0; transform: translateY(16px); filter: blur(5px); }
+  65% { opacity: 1; transform: translateY(-2px); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.display-title,
+.page-title { animation: forge-title-in .72s cubic-bezier(.2,.8,.2,1) both; will-change: transform, opacity, filter; }
+
+@media (max-width: 640px) {
+  .light .display-title { font-size: clamp(2.35rem, 9.8vw, 3.3rem); line-height: .94; }
+  .light .page-title { font-size: clamp(2.45rem, 10vw, 3.3rem); line-height: .98; }
+  .light .hero-card h3 { font-size: 1.15rem; }
+}
+
+@media (min-width: 1024px) {
+  .light .page-wrap { padding-left: 36px; padding-right: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .display-title,
+  .page-title { animation: none; }
+  .sidebar,
+  .topbar,
+  main,
+  .light .card,
+  .light .habit-row { transition: none; }
+}
+
+/* Shared card typography pass.
+   The streak card is intentionally excluded: it is the supplied reference card. */
+:root {
+  --card-heading-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --card-heading-weight: 900;
+  --card-heading-tracking: -.035em;
+  --card-label-weight: 800;
+  --card-copy-leading: 1.55;
+}
+
+/* One type system in both themes. The light theme previously reintroduced
+   Nunito through its heading overrides, while metrics used DM Mono. */
+html,
+body,
+button,
+input,
+textarea,
+select,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+label,
+li {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+}
+
+/* Preserve the supplied streak-card reference exactly: its numeric display
+   uses the original mono face and must not inherit the app-wide Inter reset. */
+.streak-card .streak-number {
+  font-family: 'DM Mono', ui-monospace, SFMono-Regular, monospace !important;
+}
+
+.page-wrap .card:not(.streak-card),
+.page-wrap .upgrade-card {
+  padding: 1.5rem;
+}
+
+.page-wrap .card:not(.streak-card) h3,
+.page-wrap .upgrade-card h3 {
+  font-family: var(--card-heading-family);
+  font-weight: var(--card-heading-weight);
+  letter-spacing: var(--card-heading-tracking);
+  line-height: 1.08;
+}
+
+/* Keep the hero headline in the same clean display family as the streak unit label. */
+.page-wrap .hero-card h3 {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -.03em;
+}
+
+/* Match the dark theme's type scale in light mode. Light mode keeps its own
+   colors, but must not change the display/title proportions or hero heading
+   size merely because the theme class is present. */
+.light .display-title,
+.light .page-title {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.light .topbar h1 {
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+
+.light .display-title {
+  font-size: clamp(2.65rem, 5vw, 4.35rem);
+  line-height: .95;
+  letter-spacing: -.075em;
+}
+
+.light .page-title {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -.065em;
+}
+
+.light .hero-card h3 {
+  font-size: 1.5rem;
+  letter-spacing: -.03em;
+}
+
+.page-wrap .card:not(.streak-card) .eyebrow,
+.page-wrap .upgrade-card .eyebrow {
+  font-weight: var(--card-label-weight);
+  letter-spacing: .16em;
+  line-height: 1.2;
+}
+
+.page-wrap .card:not(.streak-card) p,
+.page-wrap .upgrade-card p {
+  line-height: var(--card-copy-leading);
+}
+
+.page-wrap .card:not(.streak-card) .stat-value,
+.page-wrap .card:not(.streak-card) .font-mono.text-2xl,
+.page-wrap .card:not(.streak-card) .font-mono.text-3xl,
+.page-wrap .card:not(.streak-card) .font-mono.text-4xl,
+.page-wrap .upgrade-card .font-mono.text-4xl {
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: .95;
+}
+
+.page-wrap .card:not(.streak-card) .mini-stat {
+  padding: 10px 12px;
+}
+
+.page-wrap .card:not(.streak-card) .mini-stat span {
+  font-weight: 800;
+  letter-spacing: .14em;
+  line-height: 1.2;
+}
+
+.page-wrap .card:not(.streak-card) .mini-stat strong {
+  margin-top: 7px;
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.1;
+}
+
+.page-wrap .card:not(.streak-card) .habit-row p:first-child,
+.page-wrap .card:not(.streak-card) .link-button,
+.page-wrap .card:not(.streak-card) button {
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .page-wrap .card:not(.streak-card),
+  .page-wrap .upgrade-card {
+    padding: 1.25rem;
+  }
+
+  .light .display-title {
+    font-size: clamp(2.35rem, 9.8vw, 3.3rem);
+    line-height: .94;
+  }
+
+  .light .page-title {
+    font-size: clamp(2rem, 10vw, 3.3rem);
+    line-height: .98;
+  }
+
+  .light .hero-card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .light .hero-card h3 {
+    font-size: 1.875rem;
+  }
+}

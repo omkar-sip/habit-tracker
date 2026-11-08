@@ -1,0 +1,11 @@
+{
+  "routes": [
+    {"path":"/","title":"HabitForge Dashboard"},
+    {"path":"/dashboard","title":"HabitForge Dashboard"},
+    {"path":"/habits","title":"HabitForge Habits"},
+    {"path":"/analytics","title":"HabitForge Analytics"},
+    {"path":"/profile","title":"HabitForge Profile"},
+    {"path":"/upgrade","title":"HabitForge Upgrade"},
+    {"path":"/login","title":"HabitForge Login"}
+  ]
+}
